@@ -1,0 +1,46 @@
+#CacheUtil缓存的类型ehcache,redis,guava,默认是guava
+# cache配置
+open:
+  licence:
+    check: false
+    path: e:\
+  cache:
+    type: ehcache
+    name: open
+    #E:\test java.io.tmpdir
+    diskStore: java.io.tmpdir
+    caches:
+     - name: framework
+       memoryStoreEvictionPolicy: LRU
+       maxEntriesLocalHeap: 1000
+       timeToLiveSeconds: 1800
+       timeToIdleSeconds: 1800
+       diskExpiryThreadIntervalSeconds: 600
+       eternal: true
+       maxEntriesLocalDisk: 0
+       diskPersistent: true
+       maxElementsInMemory: 1
+  datasource:
+    multi:
+      names: ds1,ds2
+      ds1:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/chat?characterEncoding=utf8
+        username: root
+        password: 123456
+      ds2:
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+        username: UNIMAX4_TEST
+        password: UNIMAX4_TEST
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    username: ime
+    password: ime
+  redis:
+    #cluster:
+      #nodes: 192.168.112.105:7000,192.168.112.105:7001,192.168.112.105:7003,192.168.112.105:7002,192.168.112.105:7004,192.168.112.105:7005
+    host: localhost
+    port: 6379

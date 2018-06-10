@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    username: ime
+    password: ime
+open:
+  datasource:
+    multi:
+      names: ds1,ds2
+        ds1:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: mysql://host:3306/chat?characterEncoding=utf8
+          username: root
+          password: 123456
+        ds2:
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+          username: UNIMAX4_TEST
+          password: UNIMAX4_TEST
