@@ -31,16 +31,29 @@ open:
       ds2:
         driver-class-name: oracle.jdbc.driver.OracleDriver
         url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
-        username: UNIMAX4_TEST
-        password: UNIMAX4_TEST
+        username: ime
+        password: ime
+  logic-delete: true
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
-    username: ime
-    password: ime
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=utf8
+    username: root
+    password: 123456
   redis:
     #cluster:
       #nodes: 192.168.112.105:7000,192.168.112.105:7001,192.168.112.105:7003,192.168.112.105:7002,192.168.112.105:7004,192.168.112.105:7005
     host: localhost
     port: 6379
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        ejb:
+          interceptor: com.open.framework.dao.HibernateInterceptor
+    #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+logging:
+  level:  # 日志级别
+    org.springframework.web: DEBUG # 配置spring web日志级别

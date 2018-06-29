@@ -85,12 +85,12 @@ public class NVPair
 		this.code = code;
 	}
 
-	public String gettext()
+	public String getText()
 	{
 		return text;
 	}
 
-	public void settext(String text)
+	public void setText(String text)
 	{
 		this.text = text;
 	}

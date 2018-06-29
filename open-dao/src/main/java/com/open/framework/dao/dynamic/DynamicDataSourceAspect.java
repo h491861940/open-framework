@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Aspect
-@Order(-10)
+@Order(1)
 @Component
 public class DynamicDataSourceAspect {
 
@@ -34,9 +34,9 @@ public class DynamicDataSourceAspect {
 	public void changeDataSource(JoinPoint point, ChangeDs changeDs) throws Throwable {
 		String key = changeDs.key();
 		if (!DynamicDataSourceContextHolder.containsDataSource(key)) {
-			logger.error("当前会话切换数据源[{}]不存在，使用默认数据源 > {}", key, point.getSignature());
+			//logger.error("当前会话切换数据源[{}]不存在，使用默认数据源 > {}", key, point.getSignature());
 		} else {
-			logger.debug("当前会话切换数据源为: {}", key);
+			//logger.debug("当前会话切换数据源为: {}", key);
 			DynamicDataSourceContextHolder.setDataSource(key);
 		}
 	}
@@ -49,7 +49,7 @@ public class DynamicDataSourceAspect {
 	 */
 	@After("@annotation(changeDs)")
 	public void restoreDataSource(JoinPoint point, ChangeDs changeDs) {
-		logger.debug("当前会话结束，重置数据源为: {} ", changeDs.key());
+		//logger.debug("当前会话结束，重置数据源为: {} ", changeDs.key());
 		DynamicDataSourceContextHolder.clearDataSource();
 	}
 

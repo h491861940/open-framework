@@ -1,5 +1,5 @@
 
-package com.open.framework.core.web;
+package com.open.framework.core.web.param;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonParser.Feature;

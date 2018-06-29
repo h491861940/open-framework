@@ -1,0 +1,74 @@
+package com.open.framework.core.exception;
+
+import com.open.framework.commmon.enums.EnumBase;
+import com.open.framework.commmon.exceptions.BaseException;
+import com.open.framework.commmon.exceptions.BusinessException;
+import com.open.framework.commmon.exceptions.PlatformException;
+import com.open.framework.commmon.utils.JsonResultUtil;
+import com.open.framework.commmon.web.JsonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@ControllerAdvice
+public class ExceptionHandle {
+    private final static Logger logger = LoggerFactory.getLogger(ExceptionHandle.class);
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public JsonResult Handle(Exception e){
+
+        if (e instanceof Exception){
+            return JsonResultUtil.error(EnumBase.PlatformCode.SYSTEM_ERROR.getVal(),EnumBase.PlatformCode.SYSTEM_ERROR.getText()+e.getMessage());
+        }else {
+            //将系统异常以打印出来
+            logger.info("[系统异常]{}",e);
+            return JsonResultUtil.error(-1,"未知错误");
+        }
+    }
+    @ExceptionHandler({BaseException.class,PlatformException.class,BusinessException.class})
+    @ResponseBody
+    public JsonResult handleBaseException(BaseException e) {
+        //可以合并也可以分开处理,目前合并处理
+        if (e instanceof PlatformException){
+            PlatformException platformException = (PlatformException) e;
+            return JsonResultUtil.error(platformException.getCode(),"平台异常:  "+platformException.getMessage());
+        }else if (e instanceof BusinessException){
+            BusinessException businessException = (BusinessException) e;
+            return JsonResultUtil.error(businessException.getCode(),"业务异常:  "+businessException.getMessage());
+        }else {
+            //将系统异常以打印出来
+            return JsonResultUtil.error(-1,"未知错误");
+        }
+    }
+    //@ExceptionHandler(PlatformException.class)
+    //@ResponseBody
+    public JsonResult handleBusinessException(PlatformException e) {
+        if (e instanceof PlatformException){
+            PlatformException platformException = (PlatformException) e;
+            return JsonResultUtil.error(platformException.getCode(),"平台异常:  "+platformException.getMessage());
+        }else {
+            //将系统异常以打印出来
+            logger.info("[平台异常]{}",e);
+            return JsonResultUtil.error(-1,"未知错误");
+        }
+    }
+    //@ExceptionHandler(BusinessException.class)
+    //@ResponseBody
+    public JsonResult handleBusinessException(BusinessException e) {
+        if (e instanceof BusinessException){
+            BusinessException businessException = (BusinessException) e;
+            return JsonResultUtil.error(businessException.getCode(),"业务异常:  "+businessException.getMessage());
+        }else {
+            //将系统异常以打印出来
+            logger.info("[业务异常]{}",e);
+            return JsonResultUtil.error(-1,"未知错误");
+        }
+    }
+}

@@ -33,6 +33,7 @@
         <module>open-scheduler</module>
         <module>open-security</module>
         <module>open-supports</module>
+        <module>open-demo</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -139,6 +140,11 @@
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>${ojdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 </dependencyManagement>

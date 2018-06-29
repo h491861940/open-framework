@@ -1,5 +1,7 @@
 package com.open.framework.core.runner;
 
+import com.open.framework.commmon.utils.SpringUtil;
+import com.open.framework.commmon.utils.StringUtil;
 import com.open.framework.core.listener.InstantiationTracingBeanPostProcessor;
 import org.springframework.boot.CommandLineRunner;
 
@@ -27,11 +29,11 @@ public class StartupRunner implements CommandLineRunner {
             if(null!=key && keys.length>0){
                 serviceName=keys[1];
             }
-            /*if(StringUtil.isNotEmpty(serviceName)){
+            if(StringUtil.isNotEmpty(serviceName)){
                 Object obj=  SpringUtil.getBean(serviceName);
                 Method method=obj.getClass().getMethod(methodName);
                 method.invoke(obj);
-            }*/
+            }
         }
     }
 

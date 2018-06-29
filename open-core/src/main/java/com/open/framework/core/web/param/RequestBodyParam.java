@@ -1,4 +1,4 @@
-package com.open.framework.core.web;
+package com.open.framework.core.web.param;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
