@@ -16,14 +16,15 @@ import com.open.framework.demo.repository.StudentRepository;
 import com.open.framework.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//@Component
-//@StartRun(methodName = "test", seq = 4)
+@Component
+@StartRun(methodName = "test", seq = 4)
 public class DemoService {
     @Autowired(required = false)
     private JdbcTemplate jdbcTemplate;
@@ -96,15 +97,18 @@ public class DemoService {
 
     public void testSort() {
         List<Student> stus = studentRepository.findAll(
-                new SimpleSpecBuilder<Student>("address", "=", "zt").getSpec(),
+                new SimpleSpecBuilder<Student>("address", "eq", "zt").getSpec(),
                 SortUtil.sort("gid_d"));
         System.out.println(stus);
     }
 
     public void testPage() {
         //注意:page是从0开始的
+        Specification specification= new SimpleSpecBuilder()/*.and("address", "eq", "zt").and("address", "eq", "zt")*/
+                //.or(new String[]{"address","address"},new String[]{"eq","eq"},new Object[]{"zt","zt"})
+        .or(new String[]{"address","address"},new String[]{"eq","eq"},new Object[]{"zt","zt"}).and(new String[]{"address","address"},new String[]{"eq","eq"},new Object[]{"zt","zt"}).getSpec();
         Page<Student> stus = studentRepository.findAll(
-                new SimpleSpecBuilder<Student>("address", "=", "zt").getSpec(),
+                specification,
                 PageUtil.getPage(1, SortUtil.sort("name_d")));
         for(Student u : stus) {
             System.out.println(u.getAddress());
@@ -117,8 +121,11 @@ public class DemoService {
 
     }
 
-    public void testDeleStu2() {
-        studentRepository.deleteById("1");
+    public void delete() {
+        Student aa=new Student();
+        aa.setGid("1");
+        studentRepository.delete(aa);
+        //studentRepository.deleteById("1");
         //studentRepository.updateByHql("delete from Student where cid=?", "1");
     }
 

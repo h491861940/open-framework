@@ -1,5 +1,6 @@
 package com.open.framework.demo.model;
 
+import com.open.framework.dao.model.BaseEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -8,11 +9,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity 
-public class Demo {
-    @Id 
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    @GeneratedValue(generator = "system-uuid")
-    private String gid; // 主键.
+public class Demo extends BaseEntity {
 
     private String name;// 名称.
     private String code;// 密码.

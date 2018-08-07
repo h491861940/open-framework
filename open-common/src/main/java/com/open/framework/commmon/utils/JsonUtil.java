@@ -11,9 +11,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.JSONLibDataFormatSerializer;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.alibaba.fastjson.JSON.parseObject;
 
 
 /**
@@ -54,7 +57,7 @@ public class JsonUtil extends JSON {
      * @return
      */
     public static Map strToMap(String str){
-        return JSONObject.parseObject(str,Map.class);
+        return parseObject(str,Map.class);
     }
 
     /**
@@ -63,7 +66,7 @@ public class JsonUtil extends JSON {
      * @return
      */
     public static List strToList(String str){
-        return JSONObject.parseObject(str,List.class);
+        return parseObject(str,List.class);
     }
 
     /**
@@ -72,7 +75,11 @@ public class JsonUtil extends JSON {
      * @param clazz
      * @return
      */
-    public static Object strToBean(String str,Class clazz){
-        return JSONObject.parseObject(str,clazz);
+    public static <T> T strToBean(String str,Class<T> clazz){
+        return parseObject(str,clazz);
+    }
+    public static <T> T  mapToBean(Map map,Class<T> clazz){
+       String jsonStr= JSONObject.toJSONString(map);
+        return parseObject(jsonStr,clazz);
     }
 }

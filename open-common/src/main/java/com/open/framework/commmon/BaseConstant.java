@@ -1,5 +1,8 @@
 package com.open.framework.commmon;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BaseConstant {
     public static final String DEFAULT_CONFIG="application.yaml";
 
@@ -141,11 +144,11 @@ public class BaseConstant {
     /**
      * 逻辑方式"AND"
      */
-    public static final String DAO_AND = "AND";
+    public static final String DAO_AND = "and";
     /**
      * 逻辑方式"OR"
      */
-    public static final String DAO_OR = "OR";
+    public static final String DAO_OR = "or";
     //dao条件比较符   start
     //dao 逻辑删除   start
     /**
@@ -161,4 +164,15 @@ public class BaseConstant {
      */
     public final static String LOGIC_DELETE_YAML="open.logic-delete";
     //dao 逻辑删除   end
+
+    public static final String PAGE_SIZE = "pageSize";
+
+    public static final String PAGE      = "page";
+
+    //导出相关常量   start
+    /**
+     * 存放导出转换的值,gid==value或者code==value,每次启动或者别的时候往进丢
+     */
+    public static Map formatMap=new HashMap();
+    //导出相关常量   end
 }

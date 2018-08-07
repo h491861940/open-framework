@@ -22,9 +22,19 @@ public class PageBean implements Serializable {
      * 查询返回的list
      */
     private List rows;
+    /**
+     *  当前页的记录数
+     */
     private int numberOfElements;
+    /**
+     *  获取总记录数
+     */
     private long totalElements;
+    /**
+     * 总共多少页
+     */
     private int totalPages;
+
     public int getPage() {
         return page;
     }

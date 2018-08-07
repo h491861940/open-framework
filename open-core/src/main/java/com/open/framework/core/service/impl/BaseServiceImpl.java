@@ -1,111 +1,137 @@
 package com.open.framework.core.service.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
-
+import com.open.framework.commmon.exceptions.PlatformException;
 import com.open.framework.commmon.utils.BeanUtil;
+import com.open.framework.commmon.utils.ClassUtil;
+import com.open.framework.commmon.utils.JsonResultUtil;
+import com.open.framework.commmon.web.ExportData;
+import com.open.framework.commmon.web.PageBean;
+import com.open.framework.commmon.web.QueryParam;
+import com.open.framework.core.dao.IBaseDao;
 import com.open.framework.core.service.BaseService;
-import com.open.framework.dao.repository.base.BaseRepository;
-import com.sun.xml.internal.bind.v2.model.core.ID;
-import org.springframework.beans.BeanUtils;
+import com.open.framework.core.service.ExportService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 
-public class BaseServiceImpl<T,S> implements BaseService<T, S> {
+@Service
+public class BaseServiceImpl<T, D> implements BaseService<T, D> {
 
-	@Autowired
-	BaseRepository<T, Serializable> baseRepository;
+    @Autowired
+    IBaseDao baseDao;
+    @Autowired
+    ExportService exportService;
+    public Class<T> getEntityClass(String dtoName) {
+        Class<T> entityClass = ClassUtil.getEntityClass(this.getClass());
+        try {
+            //判断是否有entityClass,用处是判断是否有继承的子类,有子类就有泛型,没有的话根据dto去找实体
+            if (null == entityClass) {
+                entityClass = baseDao.getEntityByDto(dtoName);
+            }
+            return entityClass;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PlatformException(dtoName + "没有找见对应的实体,实体默认为:" + dtoName.replace("DTO", ""));
+        }
+    }
 
-	@Override
-	public T save(T t) {
-		return baseRepository.save(t);
-	}
+    @Override
+    public T save(T t) {
+        return (T) baseDao.saveOrUpdate(t);
+    }
 
-	@Override
-	public T saveDto(S dto) {
-		Class<T> entityClass = getEntityClass();
-		try {
-			T entity = entityClass.newInstance();
-			BeanUtil.copyProperties(dto, entity);
-			entity= save(entity);
-			return entity;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @Override
+    public T saveDto(D dto) {
+        Class entityClass = getEntityClass(dto.getClass().getSimpleName());
+        try {
+            T entity = (T) entityClass.newInstance();
+            BeanUtil.copyProperties(dto, entity);
+            entity = save(entity);
+            return entity;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PlatformException(e.getMessage());
+        }
+    }
 
-	@Override
-	public S getDto(String id) {
-		Class<S> dtoClass = getDtoClass();
-		try {
-			S dto = dtoClass.newInstance();
-			T entity =  get(id);
-			BeanUtil.copyProperties(entity,dto );
-			return dto;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @Override
+    public D getDto(String id) {
+        Class<D> dtoClass = ClassUtil.getDtoClass(this.getClass());
+        return getDto(dtoClass, id);
+    }
 
-	@Override
-	public T get(String id) {
-		return baseRepository.getOne(id);
-	}
+    @Override
+    public D getDto(Class dtoClass, String id) {
+        Class<T> entityClass = getEntityClass(dtoClass.getSimpleName());
+        T entity = get(entityClass, id);
+        try {
+            D dto = (D) dtoClass.newInstance();
+            BeanUtil.copyProperties(entity, dto);
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PlatformException(e.getMessage());
+        }
+    }
 
-	@Override
-	public void delete(String id) {
-		baseRepository.deleteById(id);
-	}
+    @Override
+    public T get(Class<T> entityClass, String id) {
+        return baseDao.get(entityClass, id);
+    }
 
-	@Override
-	public void delete(T t) {
-		baseRepository.delete(t);
-	}
+    @Override
+    public void delete(Class<T> entityClass, String id) {
+        baseDao.removeById(entityClass, id);
+    }
 
-	@Override
-	public boolean existsById(String id) {
-		return baseRepository.existsById(id);
-	}
-	@Override
-	public boolean exists(Example<T> example) {
-		return baseRepository.exists(example);
-	}
-	private Class getEntityClass() {
-		return getGenericClass(0);
-	}
+    @Override
+    public void delete(T t) {
+        baseDao.remove(t);
+    }
 
-	private Class getDtoClass() {
-		return getGenericClass(1);
-	}
+    @Override
+    public void deleteBatch(Class entityClass, List<String> ids) {
+        baseDao.removeAll(entityClass, ids);
+    }
 
-	/**
-	 * 根据i得到返修的类型,0是entity,1是DTO
-	 *
-	 * @param i
-	 * @return
-	 */
-	private Class getGenericClass(int i) {
-		if (i == 0 || i == 1) {
-			Type type = this.getClass().getGenericSuperclass();//拿到带类型参数的泛型父类
-			if (type instanceof ParameterizedType) {//这个Type对象根据泛型声明，就有可能是4中接口之一，如果它是BaseDao<User>这种形式
-				ParameterizedType parameterizedType = (ParameterizedType) type;
-				Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();//获取泛型的类型参数数组
-				if (actualTypeArguments != null && actualTypeArguments.length == 2) {
-					if (actualTypeArguments[i] instanceof Class) {//类型参数也有可能不是Class类型
-						return (Class<T>) actualTypeArguments[i];
-					}
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    public void deleteBatchDto(Class dtoClass, List<String> ids) {
+        Class<T> entityClass = getEntityClass(dtoClass.getSimpleName());
+        baseDao.removeAllIdHql(entityClass, ids);
+    }
+
+    @Override
+    public boolean existsById(Class entityClass, String id) {
+        return baseDao.isExist(entityClass, baseDao.getIdName(entityClass), id);
+    }
+
+    @Override
+    public void export(Class dtoClass, ExportData exportData) {
+       Object object= query(dtoClass,exportData.getQueryParam());
+        if (object instanceof PageBean) {
+            exportData.setDatas( ((PageBean) object).getRows());
+        } else {
+            exportData.setDatas((List) object);
+        }
+        exportService.export(exportData);
+    }
+
+    @Override
+    public Object query(Class dto, QueryParam queryParam) {
+        Class entityClass = getEntityClass(dto.getSimpleName());
+        return baseDao.findAll(entityClass, queryParam);
+    }
+
+    @Override
+    public boolean exists(Class entityClass, String propertyName, Object value) {
+        return exists(entityClass, new String[]{propertyName}, new Object[]{value});
+    }
+
+    @Override
+    public boolean exists(Class<?> entityClass, String[] propertyName, Object[] value) {
+        return baseDao.isExist(entityClass, propertyName, value);
+    }
 }

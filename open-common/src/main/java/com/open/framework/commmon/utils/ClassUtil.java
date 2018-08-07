@@ -12,6 +12,8 @@ import org.springframework.util.ClassUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -231,5 +233,35 @@ public class ClassUtil extends ClassUtils {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static Class getEntityClass(Class clazz) {
+        return getGenericClass(clazz,0);
+    }
+
+    public static Class getDtoClass(Class clazz) {
+        return getGenericClass(clazz,1);
+    }
+
+    /**
+     * 根据i得到返修的类型,0是entity,1是DTO
+     *
+     * @param i
+     * @return
+     */
+    public static Class getGenericClass(Class clazz,int i) {
+        if (i == 0 || i == 1) {
+            Type type = clazz.getGenericSuperclass();//拿到带类型参数的泛型父类
+            if (type instanceof ParameterizedType) {//这个Type对象根据泛型声明，就有可能是4中接口之一，如果它是BaseDao<User>这种形式
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();//获取泛型的类型参数数组
+                if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+                    if (actualTypeArguments[i] instanceof Class) {//类型参数也有可能不是Class类型
+                        return (Class) actualTypeArguments[i];
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

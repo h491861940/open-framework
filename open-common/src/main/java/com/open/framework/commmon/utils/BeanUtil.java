@@ -6,6 +6,7 @@
 
 package com.open.framework.commmon.utils;
 
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.beans.BeanMap;

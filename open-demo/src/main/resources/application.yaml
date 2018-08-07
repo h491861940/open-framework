@@ -53,6 +53,8 @@ spring:
       hibernate:
         ejb:
           interceptor: com.open.framework.dao.HibernateInterceptor
+        jdbc:
+          batch_size: 50
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 logging:
   level:  # 日志级别

@@ -20,7 +20,7 @@ public class SortUtil {
 		return Sort.by(orders);
 	}
 
-	private static Order generateOrder(String f) {
+	public static Order generateOrder(String f) {
 		Order order = null;
 		String[] ff = f.split("_");
 		if(ff.length>=2) {

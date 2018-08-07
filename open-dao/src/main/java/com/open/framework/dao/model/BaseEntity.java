@@ -21,13 +21,13 @@ public abstract class BaseEntity extends IdEntity {
      * 创建人
      */
     @CreatedBy
+
     protected String createId;
 
     /**
      * 创建时间
      */
     @CreatedDate
-    @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     protected Date createDate;
 
@@ -47,7 +47,7 @@ public abstract class BaseEntity extends IdEntity {
     protected boolean delState;
 
     protected boolean actState;
-
+    @Column(updatable=false)
     public String getCreateId() {
         return createId;
     }
@@ -55,7 +55,7 @@ public abstract class BaseEntity extends IdEntity {
     public void setCreateId(String createId) {
         this.createId = createId;
     }
-
+    @Column(nullable = false, updatable = false)
     public Date getCreateDate() {
         return createDate;
     }

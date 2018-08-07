@@ -42,6 +42,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     }
 
 	@Override
+	@Transactional
 	public void updateBySql(String sql,Object...args) {
     	Query query = em.createNativeQuery(sql);
     	int i = 0;
@@ -52,6 +53,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 	}
 
 	@Override
+	@Transactional
 	public void updateByHql(String hql,Object...args) {
     	Query query = em.createQuery(hql);
     	int i = 0;
@@ -65,7 +67,8 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 	@Transactional
 	public void delete(T entity) {
 		//修改为逻辑删除
-		if(BaseConstant.USE_LOGIC_DELETE.equals(YamlUtils.DefaultGetYamlValue(BaseConstant.LOGIC_DELETE_YAML))){
+		String useLogicDelete=YamlUtils.DefaultGetYamlValue(BaseConstant.LOGIC_DELETE_YAML);
+		if(StringUtil.isEmpty(useLogicDelete) || BaseConstant.USE_LOGIC_DELETE.equals(useLogicDelete)){
 			logicDelete(entity);
 		}else{
 			super.delete(entity);
@@ -73,41 +76,40 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 	}
 
 	@Override
+	@Transactional
 	public void logicDelete(ID id) {
-		T entity = super.getOne(id);
-		if (null == entity || !(entity instanceof BaseEntity)) {
-			return;
+		Optional<T> optionalT= super.findById(id);//有问题,没法保存
+		if(optionalT.isPresent()){
+			T entity=optionalT.get();
+			if (!(entity instanceof BaseEntity)) {
+				return;
+			}
+			BaseEntity model = (BaseEntity) entity;
+			model.setDelState(true);
+			this.em.merge(model);
 		}
-		BaseEntity model = (BaseEntity) entity;
-		model.setDelState(true);
-
-		this.em.merge(model);
 	}
 
 
 	@Override
+	@Transactional
 	public void logicDelete(T entity) {
-		if (null == entity || !(entity instanceof BaseEntity)) {
-			return;
-		}
-
 		BaseEntity model = (BaseEntity) entity;
-		model.setDelState(true);
-
-		if (StringUtil.isBlank(model.getGid())) {
+		logicDelete((ID) model.getGid());
+		/*if (StringUtil.isBlank(model.getGid())) {
 			em.persist(model);
 		} else {
 			em.merge(model);
-		}
+		}*/
 
 	}
 
 	@Override
+	@Transactional
 	public void logicDelete(Iterable<? extends T> entities) {
 		if (null == entities) {
 			return;
 		}
-
 		for (T entity : entities) {
 			logicDelete(entity);
 		}

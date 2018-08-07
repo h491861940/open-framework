@@ -43,6 +43,7 @@ public class JsonResultUtil {
         pageBean.setPage(page.getNumber());
         pageBean.setPageSize(page.getSize());
         pageBean.setRows(page.getContent());
+        pageBean.setCount(page.getTotalElements());
         pageBean.setTotalElements(page.getTotalElements());
         pageBean.setTotalPages(page.getTotalPages());
         return successPage(pageBean);

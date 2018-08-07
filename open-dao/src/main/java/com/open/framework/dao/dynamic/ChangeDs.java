@@ -1,5 +1,6 @@
 package com.open.framework.dao.dynamic;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.annotation.*;
@@ -23,5 +24,4 @@ public @interface ChangeDs {
 	 * @return the string
 	 */
 	String key();
-
 }

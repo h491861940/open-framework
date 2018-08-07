@@ -1,5 +1,7 @@
 package com.open.framework.commmon.web;
 
+import com.open.framework.commmon.BaseConstant;
+
 /**
  *
  * 操作符类，这个类中存储了键值对和操作符号，另外存储了连接下一个条件的类型是and还是or
@@ -23,15 +25,8 @@ public class SpecOper {
     /**
      * 连接的方式：and或者or
      */
-    private String join;
-    /**
-     * 左括号
-     */
-    protected String left;
-    /**
-     * 右括号
-     */
-    protected String right;
+    private String join=BaseConstant.DAO_AND;
+
     public String getKey() {
         return key;
     }
@@ -64,19 +59,4 @@ public class SpecOper {
         this.join = join;
     }
 
-    public String getLeft() {
-        return left;
-    }
-
-    public void setLeft(String left) {
-        this.left = left;
-    }
-
-    public String getRight() {
-        return right;
-    }
-
-    public void setRight(String right) {
-        this.right = right;
-    }
 }

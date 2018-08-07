@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 @ControllerAdvice
 public class ExceptionHandle {
@@ -25,7 +28,8 @@ public class ExceptionHandle {
     public JsonResult Handle(Exception e){
 
         if (e instanceof Exception){
-            return JsonResultUtil.error(EnumBase.PlatformCode.SYSTEM_ERROR.getVal(),EnumBase.PlatformCode.SYSTEM_ERROR.getText()+e.getMessage());
+
+            return JsonResultUtil.error(EnumBase.PlatformCode.SYSTEM_ERROR.getVal(),EnumBase.PlatformCode.SYSTEM_ERROR.getText()+getStackTrace(e.fillInStackTrace()));
         }else {
             //将系统异常以打印出来
             logger.info("[系统异常]{}",e);
@@ -71,4 +75,12 @@ public class ExceptionHandle {
             return JsonResultUtil.error(-1,"未知错误");
         }
     }
+
+    public static String getStackTrace(Throwable aThrowable) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
+    }
+
 }

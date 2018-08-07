@@ -26,7 +26,7 @@ public class TestServiceImpl implements TestService {
         u.setLoginName("hsj");
         u.setLoginDate(new Date());
         userRepository.save(u);// 保存数据.第一个save
-        throw new PlatformException("aaa");
-        //test2Service.save();//第二个save
+        //throw new PlatformException("aaa");
+        test2Service.save();//第二个save
     }
 }

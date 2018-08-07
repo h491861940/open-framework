@@ -20,7 +20,7 @@ public class DemoController {
     @Autowired(required = false)
     public DemoService demoService;
     @RequestMapping("/getBodyParam")
-    public @ResponseBody Map<String, Object> getBodyParam(@RequestBodyParam("code") String code1,
+    public  Map<String, Object> getBodyParam(@RequestBodyParam("code") String code1,
                                                           @RequestBodyParam("name") String name2){
         Map map=new HashMap();
         map.put("one",code1);
@@ -29,7 +29,7 @@ public class DemoController {
     }
 
     @RequestMapping(value = "/getBodyParam1")
-    public @ResponseBody Map<String, Object> getBodyParam1(@RequestBody String json){
+    public  Map<String, Object> getBodyParam1(@RequestBody String json){
         Map map=new HashMap();
         map.put("one",json);
         return map;
@@ -81,13 +81,13 @@ public class DemoController {
         return "ok.query";
     }
     @RequestMapping("/testQuery")
-    @ResponseBody
+
     public JsonResult testQuery() {
         Page page=demoService.testQuery();
         return JsonResultUtil.successPage(page);
     }
     @RequestMapping("/testJson")
-    @ResponseBody
+
     public JsonResult testJson() {
         User u = new User();
         u.setName("hsj");

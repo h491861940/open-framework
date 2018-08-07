@@ -1,9 +1,11 @@
 package com.open.framework.dao.specification;
 
 import com.open.framework.commmon.BaseConstant;
+import com.open.framework.commmon.web.SpecOper;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,72 +13,96 @@ public class SimpleSpec<T> implements Specification<T> {
 
     /**
      * 查询的条件列表，是一组列表
-     * */
-    private List<SpecOper> opers;
+     */
+    private List<Object> opers;
 
-    public SimpleSpec(List<SpecOper> opers) {
+    public SimpleSpec(List<Object> opers) {
         this.opers = opers;
     }
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        int index = 0;
         //通过resultPre来组合多个条件
-        Predicate resultPre = null;
-        for(SpecOper op:opers) {
-            if(index++==0) {
-                resultPre = generatePredicate(root,criteriaBuilder,op);
-                continue;
-            }
-            Predicate pre = generatePredicate(root,criteriaBuilder,op);
-            if(pre==null) continue;
-            if(BaseConstant.DAO_AND.equalsIgnoreCase(op.getJoin())) {
-                resultPre = criteriaBuilder.and(resultPre,pre);
-            } else if(BaseConstant.DAO_OR.equalsIgnoreCase(op.getJoin())) {
-                resultPre = criteriaBuilder.or(resultPre,pre);
+        String join = BaseConstant.DAO_AND;
+        Predicate predicate=null;
+        for (Object object : opers) {
+
+            if (object instanceof SpecOper) {
+                SpecOper op = (SpecOper) object;
+                Predicate pre = generatePredicate(root, criteriaBuilder, op);
+                if (null != pre && null!=predicate) {
+                    predicate=criteriaBuilder.and(pre,predicate);
+                }else{
+                    predicate=criteriaBuilder.and(pre);
+                }
+            } else if (object instanceof List) {
+                List<SpecOper> specOpers = (List) object;
+                Predicate[] predicates = new Predicate[specOpers.size()];
+                for (int i = 0; i < specOpers.size(); i++) {
+                    SpecOper op = specOpers.get(i);
+                    if (i == 0) {
+                        join = op.getJoin();
+                    }
+                    predicates[i]=(generatePredicate(root, criteriaBuilder, op));
+                }
+                if (BaseConstant.DAO_AND.equalsIgnoreCase(join)) {
+                    if(null==predicate){
+                        predicate=criteriaBuilder.and(predicates);
+                    }else{
+                        predicate=criteriaBuilder.and(predicate,criteriaBuilder.and(predicates));
+                    }
+                } else if (BaseConstant.DAO_OR.equalsIgnoreCase(join)) {
+                    if(null==predicate){
+                        predicate=criteriaBuilder.or(predicates);
+                    }else{
+                        predicate=criteriaBuilder.and(predicate,criteriaBuilder.or(predicates));
+                    }
+                }
             }
         }
-        return resultPre;
+        return predicate;
     }
 
-    private Predicate generatePredicate(Root<T> root,CriteriaBuilder criteriaBuilder, SpecOper op) {
+    private Predicate generatePredicate(Root<T> root, CriteriaBuilder criteriaBuilder, SpecOper op) {
+        Expression exp = root.get(op.getKey());
+        Object value = op.getValue();
+        String oper = op.getOper();
+
         /*
-        * 根据不同的操作符返回特定的查询*/
-        if(BaseConstant.EQUAL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.equal(root.get(op.getKey()),op.getValue());
-        } else if(BaseConstant.GREATER_OR_EQUAL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.ge(root.get(op.getKey()), (Number)op.getValue());
-        } else if(BaseConstant.LESS_OR_EQUAL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.le(root.get(op.getKey()),(Number)op.getValue());
-        } else if(BaseConstant.GREATER.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.gt(root.get(op.getKey()),(Number)op.getValue());
-        } else if(BaseConstant.LESS.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.lt(root.get(op.getKey()),(Number)op.getValue());
-        } else if(BaseConstant.LIKE.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.like(root.get(op.getKey()),"%"+op.getValue()+"%");
-        } else if(BaseConstant.LIKEA.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.like(root.get(op.getKey()),op.getValue()+"%");
-        } else if(BaseConstant.LIKEB.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.like(root.get(op.getKey()),"%"+op.getValue());
-        } else if(BaseConstant.IS_NULL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.isNull(root.get(op.getKey()));
-        } else if(BaseConstant.IS_NOT_NULL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.isNotNull(root.get(op.getKey()));
-        } else if(BaseConstant.NOT_EQUAL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.notEqual(root.get(op.getKey()),op.getValue());
-        } else if(BaseConstant.NOT_LIKE.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.notLike(root.get(op.getKey()),"%"+op.getValue()+"%");
-        }else if(BaseConstant.IS_EMPTY.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.isEmpty(root.get(op.getKey()));
-        }else if(BaseConstant.IS_NOT_EMPTY.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.isNotEmpty(root.get(op.getKey()));
-        }else if(BaseConstant.IS_IN.equalsIgnoreCase(op.getOper())) {
-            Expression exp = root.get(op.getKey());
-            String[] values=op.getValue().toString().split(",");
+         * 根据不同的操作符返回特定的查询*/
+        if (BaseConstant.EQUAL.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.equal(exp, value);
+        } else if (BaseConstant.GREATER_OR_EQUAL.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.ge(exp, (Number) value);
+        } else if (BaseConstant.LESS_OR_EQUAL.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.le(exp, (Number) value);
+        } else if (BaseConstant.GREATER.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.gt(exp, (Number) value);
+        } else if (BaseConstant.LESS.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.lt(exp, (Number) value);
+        } else if (BaseConstant.LIKE.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.like(exp, "%" + value + "%");
+        } else if (BaseConstant.LIKEA.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.like(exp, value + "%");
+        } else if (BaseConstant.LIKEB.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.like(exp, "%" + value);
+        } else if (BaseConstant.IS_NULL.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.isNull(exp);
+        } else if (BaseConstant.IS_NOT_NULL.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.isNotNull(exp);
+        } else if (BaseConstant.NOT_EQUAL.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.notEqual(exp, value);
+        } else if (BaseConstant.NOT_LIKE.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.notLike(exp, "%" + value + "%");
+        } else if (BaseConstant.IS_EMPTY.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.isEmpty(exp);
+        } else if (BaseConstant.IS_NOT_EMPTY.equalsIgnoreCase(oper)) {
+            return criteriaBuilder.isNotEmpty(exp);
+        } else if (BaseConstant.IS_IN.equalsIgnoreCase(oper)) {
+            String[] values = value.toString().split(",");
             return criteriaBuilder.and(exp.in(values));
-        }else if(BaseConstant.IS_NOT_IN.equalsIgnoreCase(op.getOper())) {
-            Expression exp = root.get(op.getKey());
-            String[] values=op.getValue().toString().split(",");
+        } else if (BaseConstant.IS_NOT_IN.equalsIgnoreCase(oper)) {
+            String[] values = value.toString().split(",");
             return criteriaBuilder.not(exp.in(values));
         }
         return null;

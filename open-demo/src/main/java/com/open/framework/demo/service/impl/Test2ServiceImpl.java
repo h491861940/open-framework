@@ -1,6 +1,5 @@
 package com.open.framework.demo.service.impl;
 
-import com.open.framework.commmon.exceptions.PlatformException;
 import com.open.framework.dao.dynamic.ChangeDs;
 import com.open.framework.demo.model.Demo;
 import com.open.framework.demo.repository.DemoRepository;
@@ -24,6 +23,7 @@ public class Test2ServiceImpl implements Test2Service {
         demo.setCode("aa");
         demo.setName("bbb");
         demoRepository.save(demo);
-        throw new PlatformException("aaa");
+
+        //throw new PlatformException("aaa");
     }
 }

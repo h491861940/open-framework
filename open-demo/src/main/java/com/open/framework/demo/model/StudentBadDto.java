@@ -1,6 +1,8 @@
 package com.open.framework.demo.model;
 
-public class StudentBadDto {
+import com.open.framework.dao.model.BaseDTO;
+
+public class StudentBadDto extends BaseDTO {
 
 	private Student stu;
 	private Classroom cla;
