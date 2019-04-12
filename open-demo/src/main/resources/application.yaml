@@ -1,8 +1,8 @@
 #CacheUtil缓存的类型ehcache,redis,guava,默认是guava
 # cache配置
 open:
-  licence:
-    check: false
+  license:
+    check: true
     path: e:\
   cache:
     type: ehcache
@@ -56,6 +56,15 @@ spring:
         jdbc:
           batch_size: 50
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  mail:
+    host: smtp.163.com
+    username: h_188188@163.com
+    password: 199222jjing
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 2500
 logging:
   level:  # 日志级别
     org.springframework.web: DEBUG # 配置spring web日志级别

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+
+        function show() {
+
+        $("form").submit();
+    }
+</script>
+<body style="text-align:center;">
+<form action="/license/generate" method="POST" >
+    到期日: <br>
+    <input type="text" name="expireDate">
+    <br>
+    硬盘disk: <br>
+    <input type="text" name="disk">
+    <br>
+    cpu:<br>
+    <input type="text" name="cpu">
+    <br>
+    主板board:<br>
+    <input type="text" name="board">
+    <br>
+    网卡地址mac:<br>
+    <input type="text" name="mac">
+    <br>
+    在线用户数:<br>
+    <input type="text" name="userCount">
+    <br>
+    是否临时:<br>
+    <select name="tempTry">
+        <option value ="yes">yes</option>
+        <option value ="no">no</option>
+    </select>
+</form>
+
+<input type="button" value="生成license" onclick="show()">
+</body>
+</html>

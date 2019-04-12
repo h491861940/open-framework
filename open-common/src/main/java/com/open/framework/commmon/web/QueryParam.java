@@ -6,7 +6,7 @@ public class QueryParam {
     /**
      * 条件集合,前端传入,然后解析
      */
-        private List<Object> specOpers;
+    private List<Object> specOpers;
     /**
      * 分页对象
      */

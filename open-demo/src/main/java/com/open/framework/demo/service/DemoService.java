@@ -4,7 +4,7 @@ import com.open.framework.commmon.BaseConstant;
 import com.open.framework.commmon.enums.EnumBase;
 import com.open.framework.commmon.exceptions.BusinessException;
 import com.open.framework.commmon.exceptions.PlatformException;
-import com.open.framework.core.runner.StartRun;
+import com.open.framework.core.startrun.StartRun;
 import com.open.framework.dao.dynamic.ChangeDs;
 import com.open.framework.dao.other.PageUtil;
 import com.open.framework.dao.other.SortUtil;
@@ -19,12 +19,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@StartRun(methodName = {"test","test1"}, seq = 4)
 @Component
-@StartRun(methodName = "test", seq = 4)
 public class DemoService {
     @Autowired(required = false)
     private JdbcTemplate jdbcTemplate;
@@ -36,7 +35,9 @@ public class DemoService {
     public void test() {
         System.out.println("我是第一个");
     }
-
+    public void test1() {
+        System.out.println("我是第二个");
+    }
     public void testDs() {
         demoService.testDs1();
         demoService.testDs2();

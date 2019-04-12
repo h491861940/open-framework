@@ -9,6 +9,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -23,10 +24,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class//指定自己的工厂类
 )
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")//实体审计,写入新增人和修改人
+@ImportResource(locations = { "classpath:druid-bean.xml" })
+
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication springApplication =new SpringApplication(Application.class);
-        springApplication.run(args);
+        SpringApplication.run(Application.class,args);
     }
 }

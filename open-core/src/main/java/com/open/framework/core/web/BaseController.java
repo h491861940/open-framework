@@ -8,12 +8,9 @@ import com.open.framework.commmon.web.JsonResult;
 import com.open.framework.commmon.web.PageBean;
 import com.open.framework.commmon.web.QueryParam;
 import com.open.framework.core.service.BaseService;
-import com.open.framework.core.service.ExportService;
 import com.open.framework.dao.model.BaseDTO;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ClassUtils;
+import com.open.framework.dao.model.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +20,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/base")
-public class BaseController<T, S> {
+public class BaseController<T, D> {
     @Autowired
-    BaseService<T, S> baseService;
+    BaseService<T, D> baseService;
     @Autowired
     HttpServletRequest request;
 
@@ -70,16 +67,17 @@ public class BaseController<T, S> {
      * @Param dto:
      **/
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public JsonResult save(@RequestBody S dto) {
+    public JsonResult save(@RequestBody D dto) {
+        T t = null;
         if (dto instanceof Map) {
             System.out.println("我是没有子类继承的");
             Object dtoTemp = JsonUtil.mapToBean((Map) dto, dtoClass);
-            baseService.saveDto((S) dtoTemp);
+            t = baseService.saveDto((D) dtoTemp);
         } else if (dto instanceof BaseDTO) {
             System.out.println("我是有子类继承带泛型的");
-            baseService.saveDto(dto);
+            t = baseService.saveDto(dto);
         }
-        return JsonResultUtil.success();
+        return JsonResultUtil.success(((BaseEntity) t).getGid());
     }
 
     /**
@@ -90,9 +88,9 @@ public class BaseController<T, S> {
      * @Param ids
      **/
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public JsonResult delete(@RequestBody String[] ids) {
-        if (null != ids && ids.length > 0) {
-            baseService.deleteBatchDto(dtoClass, Arrays.asList(ids));
+    public JsonResult delete(@RequestBody String[] gids) {
+        if (null != gids && gids.length > 0) {
+            baseService.deleteBatchDto(dtoClass, Arrays.asList(gids));
         }
         return JsonResultUtil.success();
     }
@@ -105,8 +103,8 @@ public class BaseController<T, S> {
      * @Param id
      **/
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
-    public JsonResult findById(@RequestParam String id) {
-        S dto = baseService.getDto(dtoClass, id);
+    public JsonResult findById(@RequestParam String gid) {
+        D dto = baseService.getDto(dtoClass, gid);
         return JsonResultUtil.success(dto);
     }
 
@@ -131,28 +129,30 @@ public class BaseController<T, S> {
             return JsonResultUtil.success(obj);
         }
     }
-    
+
 
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     /**
      * @Author hsj
-     * @Description 
-     * @Date  2018-07-22 22:09:05
+     * @Description
+     * @Date 2018-07-22 22:09:05
      * @param exportData 导出的条件和字段,列名
      * @return void
      * 列子
      * columns里面的字段带_f说明需要转换,则去BaseConstant.formatMap里面获取要转换的值
-     * {"columnNames":["名字","年龄"],"columns":["name_f","age"],"queryParam":{"specOpers":[{"key":"age","value":23,"oper":"eq"}],"pageBean":{"page":1,"pageSize":5}}}
+     * {"columnNames":["名字","年龄"],"columns":["name_f","age"],"queryParam":{"specOpers":[{"key":"age","value":23,
+     * "oper":"eq"}],"pageBean":{"page":1,"pageSize":5}}}
      * @param exportData
      */
-    public void export(@RequestBody ExportData exportData){
-        BaseConstant.formatMap.put("qwert","qqqq");
-        baseService.export(dtoClass,exportData);
+    public void export(@RequestBody ExportData exportData) {
+        BaseConstant.formatMap.put("qwert", "qqqq");
+        baseService.export(dtoClass, exportData);
     }
 
     @RequestMapping(value = "/export", method = RequestMethod.GET)
-    public void export(@RequestParam(required = false) String fileName,@RequestParam String[] columnNames,@RequestParam String[] columns){
-        ExportData exportData= new ExportData(fileName,columnNames,columns);
-        baseService.export(dtoClass,exportData);
+    public void export(@RequestParam(required = false) String fileName, @RequestParam String[] columnNames,
+                       @RequestParam String[] columns) {
+        ExportData exportData = new ExportData(fileName, columnNames, columns);
+        baseService.export(dtoClass, exportData);
     }
 }

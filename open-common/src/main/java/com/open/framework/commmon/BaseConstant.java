@@ -35,15 +35,15 @@ public class BaseConstant {
     /**
      * 是否坚持licence
      */
-    public static final String LICENCE_CHECK = "open.licence.check";
+    public static final String LICENSE_CHECK = "open.license.check";
     /**
      * 检查licence的路径
      */
-    public static final String LICENCE_PATH = "open.licence.path";
+    public static final String LICENSE_PATH = "open.license.path";
     /**
      * 检查licence的配置,如果强制开启,把对应检查的启动类注解去掉即可
      */
-    public static final String LICENCE_CHECK_YES = "true";
+    public static final String LICENSE_CHECK_YES = "true";
     //licence常量    end
 
     //多数据源常量   start

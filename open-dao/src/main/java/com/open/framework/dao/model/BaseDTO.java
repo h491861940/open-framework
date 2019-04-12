@@ -3,7 +3,7 @@ package com.open.framework.dao.model;
 import java.io.Serializable;
 
 public class BaseDTO implements Serializable {
-    private String gid;
+    protected String gid;
 
     public String getGid() {
         return gid;
