@@ -41,7 +41,11 @@
         </dependency>
         <dependency>
             <groupId>com.open.framework</groupId>
-            <artifactId>open-security</artifactId>
+            <artifactId>open-scheduler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.open.framework</groupId>
+            <artifactId>open-workflow</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -69,6 +73,9 @@
                                     <include>com.open.framework:open-scheduler</include>
                                     <include>com.open.framework:open-security</include>
                                     <include>com.open.framework:open-supports</include>
+<!--
+                                    <include>com.open.framework:open-workflow</include>
+-->
                                 </includes>
                             </artifactSet>
                         </configuration>

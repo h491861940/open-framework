@@ -23,6 +23,7 @@
         <guava.version>21.0</guava.version>
         <easypoi.version>3.2.0</easypoi.version>
         <poi.version>3.17</poi.version>
+        <flowable.version>6.4.1</flowable.version>
     </properties>
     <modules>
         <module>open-all</module>
@@ -38,6 +39,7 @@
         <module>open-demo</module>
         <module>open-study</module>
         <module>open-gateway</module>
+        <module>open-workflow</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -93,7 +95,11 @@
             <artifactId>open-security</artifactId>
             <version>${open.modelVersion}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.open.framework</groupId>
+            <artifactId>open-workflow</artifactId>
+            <version>${open.modelVersion}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -129,6 +135,18 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
+        <!--flowable start-->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-basic</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-json-converter</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <!--flowable end-->
        <!-- <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
