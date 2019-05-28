@@ -41,6 +41,10 @@ public class Lambda {
         listTest.add(test2);
         listTest.forEach(t-> System.out.println(t.getCode()));
         List<String> codeList=listTest.stream().map(t-> t.getCode()).collect(Collectors.toList());
+        //testa->testa,第一个是拿到要循环的对象,->后面的是要返回的结果,因为这里返回对象,所以是对象,如果返回名称,可以 ->testa.getName()
+        //最后一个,是在key重复时候,如何处理
+        Map<String ,Object> mapTest=listTest.stream().collect(Collectors.toMap(Test::getName, testa -> testa,(k1, k2)->k1));
+        System.out.println("mapTest"+mapTest.toString());
         System.out.println(codeList);
         System.out.println(listTest.stream().filter(test1 -> test1.getCode().equals("1")).collect(Collectors.toList()));
         List<Integer> nums = Arrays.asList(new Integer[]{1,1,null,2,3,4,null,5,6,7,8,9,10});
@@ -50,6 +54,16 @@ public class Lambda {
         // 给定一个Integer类型的List，获取其对应的Stream对象，然后进行过滤掉null，再去重，
         // 再每个元素乘以2，再每个元素被消费的时候打印自身，在跳过前两个元素，
         // 最后去前四个元素进行加和运算。
+
+        Test test3=new Test("a","1");
+        Test test4=new Test("b","2");
+        Test test5=new Test("b","2");
+        List<Test> listTest1=new ArrayList();
+        listTest1.add(test3);
+        listTest1.add(test4);
+        listTest1.add(test5);
+        Map<String, List<Test>> groupBy = listTest1.stream().collect(Collectors.groupingBy(Test::getCode));
+        System.out.println(groupBy.toString());
     }
 }
 class Test{

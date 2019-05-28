@@ -8,8 +8,13 @@ public abstract class OneDayTemplate {
         this.sleep();
         if(hook()){
             //可以干点啥
+            this.doOther();
         }
 
+    }
+    public  void doOther()
+    {
+        //做些额外的事情,没有逻辑,等子类实现
     }
     /**
      * 起床

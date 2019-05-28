@@ -7,6 +7,7 @@ public class App {
         
         Jerry jerry = new Jerry();
         jerry.oneDay();
+        System.out.println("-----------------------------");
         TempImpl tempImpl=new TempImpl();
         String info=tempImpl.tempCallBackTest(new TempCallBack(){
             @Override
@@ -15,7 +16,7 @@ public class App {
             }
         });
         System.out.println(info);
-
+        System.out.println("-----------------------------");
         TempImpl tempImpl2=new TempImpl();
         String info2=tempImpl2.tempCallBackTest(str -> str+"开始干活了","hsj");
         System.out.println(info2);

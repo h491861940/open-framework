@@ -37,6 +37,7 @@
         <module>open-supports</module>
         <module>open-demo</module>
         <module>open-study</module>
+        <module>open-gateway</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -151,6 +152,11 @@
         </dependency>
         <!--cache end -->
         <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.3.5.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>${ojdbc.version}</version>
@@ -254,11 +260,6 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
             <version>5.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
         </dependency>
     </dependencies>
 </dependencyManagement>

@@ -15,5 +15,9 @@ public class Tom extends OneDayTemplate {
     public void sleep() {
         System.out.println("玩了一天游戏睡觉了");
     }
-
+    @Override
+    public  void doOther()
+    {
+        System.out.println("一直睡不着,看会电视把");
+    }
 }
