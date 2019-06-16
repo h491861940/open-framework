@@ -20,8 +20,6 @@ public class StartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String...args) throws Exception {
-        System.out.println(">>>>>>>>>>>>>>>服务启动执行，执行加载数据等操作<<<<<<<<<<<<<");
-
         for (StartRunDTO startRunDTO : CommonApplicationListener.runList) {
             String methodName=startRunDTO.getMethodName();
             String serviceName=startRunDTO.getServiceName();

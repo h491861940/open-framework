@@ -3,6 +3,7 @@ package com.open.framework.demo.web;
 import com.open.framework.commmon.utils.JsonResultUtil;
 import com.open.framework.commmon.web.JsonResult;
 import com.open.framework.core.web.param.RequestBodyParam;
+import com.open.framework.demo.design.BaseDesignExecute;
 import com.open.framework.demo.model.User;
 import com.open.framework.demo.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.util.Map;
 public class DemoController {
     @Autowired(required = false)
     public DemoService demoService;
+    @Autowired
+    BaseDesignExecute demoOther;
     @RequestMapping("/getBodyParam")
     public  Map<String, Object> getBodyParam(@RequestBodyParam("code") String code1,
                                                           @RequestBodyParam("name") String name2){
@@ -33,10 +36,6 @@ public class DemoController {
         Map map=new HashMap();
         map.put("one",json);
         return map;
-    }
-    @RequestMapping("/testDs")
-    public void testDs(){
-        demoService.testDs();
     }
     @RequestMapping("/testEx1")
     public void testEx1(){
@@ -96,4 +95,20 @@ public class DemoController {
         u.setLoginDate(new Date());
         return JsonResultUtil.success(u);
     }
+    @RequestMapping(value = "/testDesign")
+    public  JsonResult testDesign(@RequestParam String className,@RequestParam String str){
+        demoOther.execute(className,str);
+        return JsonResultUtil.success();
+    }
+    @RequestMapping(value = "/testAsync")
+    public  JsonResult testAsync(){
+        demoService.executeAsync();
+        return JsonResultUtil.success();
+    }
+    @RequestMapping(value = "/publishEvent")
+    public  JsonResult publishEvent(){
+        demoService.publishEvent();
+        return JsonResultUtil.success();
+    }
+
 }

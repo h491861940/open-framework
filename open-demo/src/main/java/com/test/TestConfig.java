@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 /**
  * @Auther: hsj
  * @Date: 2019/4/15 10:50
- * @Description:
+ * @Description: spring.factories里面配置的启动
  */
 //@Configuration
 @Import(TestB.class)

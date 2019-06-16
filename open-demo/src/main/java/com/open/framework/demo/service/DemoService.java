@@ -4,6 +4,8 @@ import com.open.framework.commmon.BaseConstant;
 import com.open.framework.commmon.enums.EnumBase;
 import com.open.framework.commmon.exceptions.BusinessException;
 import com.open.framework.commmon.exceptions.PlatformException;
+import com.open.framework.core.event.OpenEvent;
+import com.open.framework.core.event.OpenEventListener;
 import com.open.framework.core.startrun.StartRun;
 import com.open.framework.dao.dynamic.ChangeDs;
 import com.open.framework.dao.other.PageUtil;
@@ -15,9 +17,11 @@ import com.open.framework.demo.repository.ClassroomRepository;
 import com.open.framework.demo.repository.StudentRepository;
 import com.open.framework.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,8 +32,6 @@ public class DemoService {
     @Autowired(required = false)
     private JdbcTemplate jdbcTemplate;
     @Autowired(required = false)
-    private DemoService demoService;
-    @Autowired(required = false)
     private UserRepository userRepository;
 
     public void test() {
@@ -37,11 +39,6 @@ public class DemoService {
     }
     public void test1() {
         System.out.println("我是第二个");
-    }
-    public void testDs() {
-        demoService.testDs1();
-        demoService.testDs2();
-        demoService.testDs3();
     }
 
     public void testDs1() {
@@ -179,5 +176,22 @@ public class DemoService {
                 new SimpleSpecBuilder<Student>("address", BaseConstant.IS_NOT_IN, "zt,bb").getSpec(),
                 PageUtil.getPage(3, SortUtil.sort("name_d")));
        return  stus;
+    }
+    @Async("openAsyncServiceExecutor")
+    public void executeAsync() {
+        System.out.println("start executeAsync");
+        try{
+            Thread.sleep(10000);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("end executeAsync");
+    }
+
+    @Autowired
+    private ApplicationContext context;
+
+    public void publishEvent() {
+        context.publishEvent(new OpenEvent("这是我发布的消息"));
     }
 }
