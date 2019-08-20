@@ -8,20 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/test")
-public class TestController {
-    @Autowired
-    public TestService testService;
+@RequestMapping("/test1")
+public class Test1Controller {
     @Autowired
     public Test2Service test2Service;
-    @RequestMapping("/save")
-    public String save() {
-        testService.save();// 保存数据.
-        return "ok.save";
-    }
     @RequestMapping("/modify")
     public String modify() {
-        testService.modify();// 保存数据.
+        test2Service.modify2();// 保存数据.
         return "ok.modify";
     }
+
 }

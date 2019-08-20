@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User,String> {
     @Query(value = "select password,loginName from User b where b.name like %:name%")
     List<User> getInfo(@Param("name") String name);
 

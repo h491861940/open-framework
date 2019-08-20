@@ -19,8 +19,8 @@ import java.util.List;
  * @Description:
  */
 @RestController
-@RequestMapping("/base")
-public abstract class ExportController {
+@RequestMapping("/excel")
+public  class ExportController {
     @Autowired
     ExportService exportService;
     @RequestMapping(value = "/export", method = RequestMethod.POST)

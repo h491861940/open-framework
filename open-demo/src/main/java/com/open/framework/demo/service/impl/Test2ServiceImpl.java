@@ -2,18 +2,23 @@ package com.open.framework.demo.service.impl;
 
 import com.open.framework.dao.dynamic.ChangeDs;
 import com.open.framework.demo.model.Demo;
+import com.open.framework.demo.model.User;
 import com.open.framework.demo.repository.DemoRepository;
+import com.open.framework.demo.repository.UserRepository;
 import com.open.framework.demo.service.Test2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class Test2ServiceImpl implements Test2Service {
     @Autowired(required = false)
     private DemoRepository demoRepository;
-
+    @Autowired(required = false)
+    private UserRepository userRepository;
     @Override
     @ChangeDs(key = "ds1")
     @Transactional(propagation=Propagation.REQUIRES_NEW)
@@ -25,5 +30,19 @@ public class Test2ServiceImpl implements Test2Service {
         demoRepository.save(demo);
 
         //throw new PlatformException("aaa");
+    }
+    @Override
+    public void modify2() {
+        User u = userRepository.findById("111").orElse(null);
+        System.out.println("2222的用户"+u.toString());
+        u.setName("2222");
+        u.setLoginDate(new Date());
+        userRepository.save(u);
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

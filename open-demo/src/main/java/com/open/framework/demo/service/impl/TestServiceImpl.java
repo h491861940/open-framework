@@ -29,4 +29,27 @@ public class TestServiceImpl implements TestService {
         //throw new PlatformException("aaa");
         test2Service.save();//第二个save
     }
+
+    @Override
+    public void modify() {
+        User u = userRepository.findById("111").orElse(null);
+        System.out.println("1111的用户"+u.toString());
+        u.setName("1111");
+        u.setLoginDate(new Date());
+        new Thread(() -> {
+            User u1 = userRepository.findById("111").orElse(null);
+            System.out.println("33333的用户"+ u1.toString());
+            u1.setName("333");
+            u1.setLoginDate(new Date());
+
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            userRepository.save(u1);
+        }).start();
+        userRepository.save(u);
+    }
+
 }

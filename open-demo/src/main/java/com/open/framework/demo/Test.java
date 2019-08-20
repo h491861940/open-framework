@@ -40,6 +40,6 @@ public class Test {
     }
 
     public static void main(String[] args) throws JSQLParserException{
-        System.out.println(getTableNameBySql("select gid,(select * from teacher where name=a.name) from student a, classroom b left join schoole s on s.gid=b.aid where 1=1 and a.git=b.cid "));
+       System.out.println(getTableNameBySql("select gid,(select * from teacher where name=a.name) from student a, classroom b left join schoole s on s.gid=b.aid where 1=1 and a.git=b.cid "));
     }
 }

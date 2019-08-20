@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface TestService {
     void save();
+    void modify();
+
 }

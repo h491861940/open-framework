@@ -55,24 +55,35 @@ public class Lambda {
         // 再每个元素乘以2，再每个元素被消费的时候打印自身，在跳过前两个元素，
         // 最后去前四个元素进行加和运算。
 
-        Test test3=new Test("a","1");
-        Test test4=new Test("b","2");
-        Test test5=new Test("b","2");
+        Test test3=new Test("bbbb",BigDecimal.valueOf(2));
+        Test test4=new Test("aaa",BigDecimal.valueOf(4));
+        Test test5=new Test("cccc",BigDecimal.valueOf(5));
         List<Test> listTest1=new ArrayList();
-        listTest1.add(test3);
-        listTest1.add(test4);
         listTest1.add(test5);
-        Map<String, List<Test>> groupBy = listTest1.stream().collect(Collectors.groupingBy(Test::getCode));
+        listTest1.add(test4);
+        listTest1.add(test3);
+
+        listTest1.sort(Comparator.comparing(Test::getName));//这两个一样listTest1.sort((a, b) -> a.getName().compareTo(b.getName()));
+        System.out.println("--------------------"+listTest1.toString());
+
+        Map<String, List<Test>> groupBy = listTest1.stream().collect(Collectors.groupingBy(Test::getName));
         System.out.println(groupBy.toString());
+
+        BigDecimal totalMoney = listTest1.stream().map(Test::getCount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        System.out.println(totalMoney);
     }
 }
 class Test{
     private String name;
     private String code;
-
+    private BigDecimal count;
     public Test(String name, String code) {
         this.name = name;
         this.code = code;
+    }
+    public Test(String name, BigDecimal count) {
+        this.name = name;
+        this.count = count;
     }
     public String getName() {
         return name;
@@ -82,11 +93,28 @@ class Test{
         this.name = name;
     }
 
+    public BigDecimal getCount() {
+        return count;
+    }
+
+    public void setCount(BigDecimal count) {
+        this.count = count;
+    }
+
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "Test{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", count=" + count +
+                '}';
     }
 }

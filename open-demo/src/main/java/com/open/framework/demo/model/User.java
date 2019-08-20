@@ -59,5 +59,14 @@ public class User {
         this.loginDate = loginDate;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "gid='" + gid + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", loginName='" + loginName + '\'' +
+                ", loginDate=" + loginDate +
+                '}';
+    }
 }
