@@ -1,11 +1,16 @@
 package com.open.framework.commmon.web;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
-
+/**
+ * @description: 分页对象
+ * @author: hsj
+ * @date: 2019-08-23 18:15:48
+ */
+@Data
 public class PageBean implements Serializable {
-
-
     /**
      * 当前页
      */
@@ -35,60 +40,5 @@ public class PageBean implements Serializable {
      */
     private int totalPages;
 
-    public int getPage() {
-        return page;
-    }
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
-    }
-
-    public List getRows() {
-        return rows;
-    }
-
-    public void setRows(List rows) {
-        this.rows = rows;
-    }
-
-    public void setNumberOfElements(int numberOfElements) {
-        this.numberOfElements = numberOfElements;
-    }
-
-    public int getNumberOfElements() {
-        return numberOfElements;
-    }
-
-
-    public void setTotalElements(long totalElements) {
-        this.totalElements = totalElements;
-    }
-
-    public long getTotalElements() {
-        return totalElements;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
 }

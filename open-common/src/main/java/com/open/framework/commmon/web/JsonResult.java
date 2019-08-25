@@ -1,10 +1,14 @@
 package com.open.framework.commmon.web;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.open.framework.commmon.BaseConstant;
+import lombok.Data;
+import org.springframework.data.domain.Page;
 
 /**
  * http请求返回的最外层对象
  */
+@Data
 public class JsonResult<T> {
 
     /**
@@ -24,36 +28,79 @@ public class JsonResult<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private PageBean pageBean;
-
-    public Integer getCode() {
-        return code;
+    /**
+     * 把对象放到data返回
+     * @param object
+     * @return
+     */
+    public static JsonResult success(Object object) {
+        JsonResult JsonResult = new JsonResult();
+        JsonResult.setCode(BaseConstant.SUCCESS_CODE);
+        JsonResult.setMsg(BaseConstant.SUCCESS);
+        JsonResult.setData(object);
+        return JsonResult;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    /**
+     * 返回分页信息,自己组建好PageBean
+     * @param pageBean
+     * @return
+     */
+    public static JsonResult successPage(PageBean pageBean) {
+        JsonResult JsonResult = new JsonResult();
+        JsonResult.setCode(BaseConstant.SUCCESS_CODE);
+        JsonResult.setMsg(BaseConstant.SUCCESS);
+        JsonResult.setPageBean(pageBean);
+        return JsonResult;
     }
 
-    public String getMsg() {
-        return msg;
+    /**
+     * 传入Page对象,组建返回的分页信息,为了和前端对应pageBean.setPage会-1,因为Page第几页数是从0开始
+     * @param page
+     * @return
+     */
+    public static JsonResult successPage(Page page) {
+        PageBean pageBean = new PageBean();
+        pageBean.setNumberOfElements(page.getNumberOfElements());
+        pageBean.setPage(page.getNumber());
+        pageBean.setPageSize(page.getSize());
+        pageBean.setRows(page.getContent());
+        pageBean.setCount(page.getTotalElements());
+        pageBean.setTotalElements(page.getTotalElements());
+        pageBean.setTotalPages(page.getTotalPages());
+        return successPage(pageBean);
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    /**
+     * 返回 成功信息
+     * @return
+     */
+    public static JsonResult success() {
+        return success(null);
     }
 
-    public T getData() {
-        return data;
+    /**
+     *
+     * @param code 异常编码
+     * @param msg 异常信息
+     * @return
+     */
+    public static JsonResult error(Integer code, String msg) {
+        JsonResult JsonResult = new JsonResult();
+        JsonResult.setCode(code);
+        JsonResult.setMsg(msg);
+        return JsonResult;
     }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public PageBean getPageBean() {
-        return pageBean;
-    }
-
-    public void setPageBean(PageBean pageBean) {
-        this.pageBean = pageBean;
+    /**
+     *
+     * @param code 异常编码
+     * @param msg 异常信息
+     * @return
+     */
+    public static JsonResult error(String msg) {
+        JsonResult JsonResult = new JsonResult();
+        JsonResult.setCode(-1);
+        JsonResult.setMsg(msg);
+        return JsonResult;
     }
 }

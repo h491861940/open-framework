@@ -1,65 +1,84 @@
 package com.open.framework.file.service.impl;
 
-import com.open.framework.file.dto.ExportData;
+import com.open.framework.commmon.utils.ExcelUtil;
+import com.open.framework.commmon.utils.JsonUtil;
+import com.open.framework.commmon.utils.RequestHolder;
+import com.open.framework.commmon.web.ExportData;
 import com.open.framework.file.service.ExportService;
-import com.open.framework.file.utils.ExcelUtils;
-import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
-/**
- * @Auther: hsj
- * @Date: 2018/7/22 17:14
- * @Description:
- */
+
 @Service
 public class ExportServiceImpl implements ExportService {
     @Override
     public void export(ExportData exportData) {
-        HashMap<String,Object> dataMap = new HashMap<>();
-        String[] rowsName = new String[]{"时间","发言人","类型","消息"};
-        exportData.setColumn(rowsName);
-        List<Map> datas = new ArrayList<Map>();
+        List listDatas=exportData.getDatas();
         String[] colNames = exportData.getColumnNames();
-        String[] columns = exportData.getColumn();
-        for(int i=0;i<30;i++){
-            dataMap.put("datetime", "2017-12-13 10:43:00");
-            dataMap.put("person", "张翠山");
-            dataMap.put("type", "文本");
-            dataMap.put("content", "工作一定要认真，态度要端正，作风要优良，行事要效率，力争打造一个完美的产品出来。");
-            datas.add(dataMap);
+        String[] columns = exportData.getColumns();
+        if(null==colNames || null==columns){
+            return;
         }
+        //因为字段带_f表示格式化,所以需要重新组建列,用于转换
+        String[] newColumns=new String[columns.length];
+        List datas=new ArrayList();
         if(null!=exportData){
-            if (datas.size() > 0) // 如果有导出记录行数，则执行转换
+            // 如果有导出记录行数，则执行转换
+            if (listDatas.size() > 0)
             {
-                for (String colName : colNames)
-                {
-                    if (datas.get(0).containsKey(colName)) // 只有导出的列包含此列时才执行循环
+                for(Object obj:listDatas){
+                    String json=JsonUtil.toJSONString(obj);
+                    //转成map
+                    Map mapTemp=JsonUtil.strToMap(json);
+                    //新的导出的map,后续可以做转换,或者格式化等
+                    Map newMap=new HashMap();
+                    for (int i=0;i<columns.length;i++)
                     {
+                        String col=columns[i];
+                        String[] cols=col.split("_");
+                        //判断是否有转换的需求
+                        if(cols.length==2){
+                            Object value=mapTemp.get(cols[0]);
+                            //获取转换值
+                            Object valueFormat=ExcelUtil.formatMap.get(value);
+                            newColumns[i]=cols[0];
+                            //转换值为空,则存放原值
+                            if(null==valueFormat){
+                                newMap.put(cols[0],value);
+                            }else{
+                                newMap.put(cols[0],valueFormat);
+                            }
+                        }else{
+                            newColumns[i]=col;
+                            newMap.put(col,mapTemp.get(col));
+                        }
 
                     }
+                    datas.add(newMap);
                 }
             }
-            Workbook workbook = ExcelUtils.getHSSFWorkbook(Arrays.asList(columns), Arrays.asList(colNames), datas);
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            Workbook workbook = ExcelUtil.getHSSFWorkbook(Arrays.asList(newColumns), Arrays.asList(colNames), datas);
             try {
-                //workbook.write(os);
-                ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-                String fileName = "export";//默认导出的文件名
+                //默认导出的文件名
+                String fileName = "export";
                 if(exportData.getFileName()!=null && !"".equals(exportData.getFileName())){
                     fileName = exportData.getFileName();
                 }
-                if(!(fileName.endsWith(".xls")||fileName.endsWith(".XLS"))){
+                if(!(fileName.endsWith(".xls") || fileName.endsWith(".XLS"))){
                     fileName+=".xls";
                 }
-                //StreamDataMode streamData = new StreamDataMode(fileName,is,"application/vnd.ms-excel;charset=UTF-8");
-                FileOutputStream fos = new FileOutputStream(new File("E:\\sheet\\11.xls"));
-                workbook.write(fos);
-                workbook.close();
-                fos.close();
+                HttpServletResponse response=RequestHolder.getResponse();
+                OutputStream output=RequestHolder.getResponse().getOutputStream();
+                response.reset();
+                response.setHeader("Content-disposition", "attachment; filename="+fileName);
+                response.setContentType("application/msexcel");
+                workbook.write(output);
+                output.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

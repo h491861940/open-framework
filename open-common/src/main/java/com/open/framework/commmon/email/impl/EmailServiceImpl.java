@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private EmailConfig emailConfig;
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender mailSender;
 
     public void sendSimpleMail(String sendTo, String titel, String content) {

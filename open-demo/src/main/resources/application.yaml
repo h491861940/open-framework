@@ -47,7 +47,7 @@ spring:
     port: 6379
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -59,12 +59,14 @@ spring:
   mail:
     host: smtp.163.com
     username: h_188188@163.com
-    password: 199222jjing
+    password: xxxx
     properties:
       mail:
         smtp:
           auth: true
           timeout: 2500
+  main:
+        allow-bean-definition-overriding: true
 logging:
   level:  # 日志级别
     org.springframework.web: DEBUG # 配置spring web日志级别

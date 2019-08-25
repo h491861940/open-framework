@@ -1,13 +1,13 @@
 package com.open.framework.file.service;
 
-import com.open.framework.file.dto.ExportData;
+
+import com.open.framework.commmon.web.ExportData;
 
 /**
- * @Auther: hsj
- * @Date: 2018/7/22 17:14
- * @Description:
+ * @description: 导入的实现
+ * @author: hsj
+ * @date: 2019-08-24 23:38:21
  */
 public interface ExportService {
-    public void export(ExportData exportData);
-
+    void export(ExportData exportData);
 }

@@ -1,5 +1,6 @@
 package com.open.framework.dao.repository.base;
 
+import com.open.framework.commmon.web.QueryParam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -21,4 +22,7 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
     void updateBySql(String sql, Object... args);
 
     void updateByHql(String hql, Object... args);
+
+
+    Object findAll(QueryParam queryParam);
 }

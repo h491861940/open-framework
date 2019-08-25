@@ -2,13 +2,17 @@ package com.open.framework.commmon;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * @description: 常量定义类
+ * @author: hsj
+ * @date: 2019-08-25 16:11:13
+ */
 public class BaseConstant {
     public static final String DEFAULT_CONFIG="application.yaml";
 
     //web返回前台提示    start
-    public static final int RESULT_SUCCESS=0;
-    public static final String RESULT_SUCCESS_MSG="success";
+    public static final int SUCCESS_CODE =0;
+    public static final String SUCCESS ="success";
     //web返回前台提示    end
 
     //缓存常量    start
@@ -163,6 +167,9 @@ public class BaseConstant {
      * 获取逻辑删除是否开启的属性
      */
     public final static String LOGIC_DELETE_YAML="open.logic-delete";
+
+    public final static String DELETE="1";
+
     //dao 逻辑删除   end
 
     public static final String PAGE_SIZE = "pageSize";

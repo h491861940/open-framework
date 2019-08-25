@@ -1,6 +1,7 @@
 package com.open.framework.commmon.web;
 
 import com.open.framework.commmon.BaseConstant;
+import lombok.Data;
 
 /**
  *
@@ -9,6 +10,7 @@ import com.open.framework.commmon.BaseConstant;
  * 特殊的自定义几个操作符(:表示like %v%，b:表示v%,:b表示%v)
  * in的value是"aa,bb,cc,dd"这种的字符串
  */
+@Data
 public class SpecOper {
     /**
      * 操作符的key，如查询时的name,id之类
@@ -26,37 +28,5 @@ public class SpecOper {
      * 连接的方式：and或者or
      */
     private String join=BaseConstant.DAO_AND;
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    public String getOper() {
-        return oper;
-    }
-
-    public void setOper(String oper) {
-        this.oper = oper;
-    }
-
-    public String getJoin() {
-        return join;
-    }
-
-    public void setJoin(String join) {
-        this.join = join;
-    }
 
 }

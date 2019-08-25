@@ -21,9 +21,10 @@
         <ojdbc.version>11.2.0.3</ojdbc.version>
         <druid.version>1.1.10</druid.version>
         <guava.version>21.0</guava.version>
-        <easypoi.version>3.2.0</easypoi.version>
-        <poi.version>3.17</poi.version>
+        <poi.version>4.0.0</poi.version>
+        <easypoi.version>4.0.0</easypoi.version>
         <flowable.version>6.4.1</flowable.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
     </properties>
     <modules>
         <module>open-all</module>
@@ -194,36 +195,16 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-base</artifactId>
-            <version>${easypoi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-web</artifactId>
-            <version>${easypoi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-annotation</artifactId>
-            <version>${easypoi.version}</version>
-        </dependency>
-        <!-- poi 3.17版本 -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${poi.version}</version>
-        </dependency>
+        <!-- poi 4.0.0版本 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-schemas</artifactId>
-            <version>${poi.version}</version>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-spring-boot-starter</artifactId>
+            <version>${easypoi.version}</version>
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>
@@ -278,6 +259,16 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
             <version>5.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger2.version}</version>
         </dependency>
     </dependencies>
 </dependencyManagement>

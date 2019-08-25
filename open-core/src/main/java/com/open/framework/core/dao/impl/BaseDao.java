@@ -19,7 +19,6 @@ import com.open.framework.commmon.web.PageBean;
 import com.open.framework.commmon.web.QueryParam;
 import com.open.framework.commmon.web.SpecOper;
 import com.open.framework.core.dao.IBaseDao;
-import com.open.framework.core.service.impl.BaseServiceImpl;
 import com.open.framework.dao.model.BaseEntity;
 import com.open.framework.dao.other.PageUtil;
 import com.open.framework.dao.other.SortUtil;
@@ -162,7 +161,7 @@ public class BaseDao implements IBaseDao {
     @Override
     public void remove(Object entity) {
         if (entity instanceof BaseEntity) {
-            ((BaseEntity) entity).setDelState(true);
+            ((BaseEntity) entity).setDelState(BaseConstant.DELETE);
             entityManager.persist(entity);
         }
     }
@@ -577,7 +576,13 @@ public class BaseDao implements IBaseDao {
         }
         return list;
     }
-
+    /**
+     * @Author hsj
+     * @Description  com.open.framework.dao.repository.base.BaseRepositoryImpl也在使用,需要 同步修改
+     * @Date  2019-08-25 18:21:23
+     * @Params 
+     * @Returns 
+     **/
     @Override
     public Object findAll(Class entityClass, QueryParam queryParam) {
         if(null==queryParam){
@@ -613,7 +618,7 @@ public class BaseDao implements IBaseDao {
                 newPageBean.setPageSize(pageSize);
                 newPageBean.setPage(page);
                 //是否显示总数
-                if (queryParam.getShowCount()) {
+                if (queryParam.isShowCount()) {
                     //显示总数以后,需要置空,否则下面.list()的时候会得到的是count()的数据
                     newPageBean.setCount((Long) criteria.setProjection(Projections.rowCount())
                             .uniqueResult());
@@ -627,7 +632,7 @@ public class BaseDao implements IBaseDao {
         return criteria.list();//返回没有分页对象
     }
 
-    public Criteria getWhere(Criteria criteria, List<Object> specOpers) {
+    private  Criteria getWhere(Criteria criteria, List<Object> specOpers) {
         List<Criterion> list = null;
         String tempJoin = null;
         //拿到条件的数组,条件有一个或者集合,所以只能是object,然后自己判断类型转换
@@ -666,7 +671,7 @@ public class BaseDao implements IBaseDao {
         return criteria;
     }
 
-    public Criterion getCriterion(SpecOper specOper) {
+    private  Criterion getCriterion(SpecOper specOper) {
         Criterion temp = null;
         String oper = specOper.getOper();
         String key = specOper.getKey();

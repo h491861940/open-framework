@@ -1,7 +1,5 @@
 package com.open.framework.schedule.controller;
 
-import com.open.framework.commmon.utils.BeanUtil;
-import com.open.framework.commmon.utils.JsonResultUtil;
 import com.open.framework.commmon.web.JsonResult;
 import com.open.framework.commmon.web.PageBean;
 import com.open.framework.commmon.web.QueryParam;
@@ -38,7 +36,7 @@ public class TaskDetailController {
      **/
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public JsonResult save(@RequestBody TaskDetail entity) {
-        return JsonResultUtil.success(service.save(entity).getGid());
+        return JsonResult.success(service.save(entity).getGid());
     }
 
 
@@ -52,7 +50,7 @@ public class TaskDetailController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public JsonResult delete(@RequestBody List<String> ids) {
         service.delete(ids);
-        return JsonResultUtil.success();
+        return JsonResult.success();
     }
 
     /**
@@ -65,7 +63,7 @@ public class TaskDetailController {
     @PutMapping
     public JsonResult update(@RequestBody TaskDetail entity) {
         service.update(entity);
-        return JsonResultUtil.success();
+        return JsonResult.success();
     }
 
     /**
@@ -77,16 +75,16 @@ public class TaskDetailController {
      **/
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
     public JsonResult findById(@RequestParam String id) {
-        return JsonResultUtil.success(service.findById(id));
+        return JsonResult.success(service.findById(id));
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     public JsonResult query(@RequestBody QueryParam queryParam) {
         Object obj = baseService.query(TaskDetailDTO.class, queryParam);
         if (obj instanceof PageBean) {
-            return JsonResultUtil.successPage((PageBean) obj);
+            return JsonResult.successPage((PageBean) obj);
         } else {
-            return JsonResultUtil.success(obj);
+            return JsonResult.success(obj);
         }
     }
 

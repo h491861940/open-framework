@@ -4,6 +4,7 @@ import com.open.framework.dao.dynamic.DynamicDataSourceRegister;
 import com.open.framework.dao.repository.base.BaseRepositoryFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -12,9 +13,12 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import javax.persistence.Entity;
+
 @SpringBootApplication
 @ServletComponentScan
 @ComponentScan({"com.open.framework"})
+@EntityScan("com.open.framework.*.*")
 @Import(DynamicDataSourceRegister.class)//动态数据源注册
 @EnableAspectJAutoProxy//切面配置
 @EnableJpaRepositories(basePackages = {"com.open.framework"},

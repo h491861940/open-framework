@@ -92,21 +92,24 @@ public class CustomFormServiceImpl  implements CustomFormService {
         //设置自定义表单主体对象
         if(CollectionUtils.isNotEmpty(customForm.getFields())){
             customForm.getFields().stream().forEach((x)-> {
-                customFormDetailList.add(x.setParentType(1).setParentGid(customForm.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(new Date()));
+                x.setGid(getNewGid());
+                customFormDetailList.add(x.setParentType(1).setParentGid(customForm.getGid()).setCudState(1).setCreateTime(new Date()));
             });
         }
         //自定义表单子表对象
         if(CollectionUtils.isNotEmpty(customForm.getChilds())){
             for (int i = 0; i <customForm.getChilds().size(); i++) {
                 CustomFormChild customFormChild=customForm.getChilds().get(i);
-                customFormChild.setGid(getNewGid()).setCustomFormGid(customForm.getGid()).setCudState(1);
+                customFormChild.setGid(getNewGid());
+                customFormChild.setCustomFormGid(customForm.getGid()).setCudState(1);
                 if(StringUtil.isEmpty(customFormChild.getCode())){
                     customFormChild.setCode(customForm.getCode()+i);
                 }
                 //子表对象的属性
                 if(CollectionUtils.isNotEmpty(customFormChild.getFields())){
                     customFormChild.getFields().stream().forEach((x)-> {
-                        customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(new Date()));
+                        x.setGid(getNewGid());
+                        customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setCudState(1).setCreateTime(new Date()));
                     });
                 }
                 customFormChildList.add(customFormChild);
@@ -132,7 +135,8 @@ public class CustomFormServiceImpl  implements CustomFormService {
         if(CollectionUtils.isNotEmpty(customForm.getFields())){
             customForm.getFields().stream().forEach((x)-> {
                 if(StringUtil.isEmpty(x.getGid())){
-                    customFormDetailList.add(x.setParentType(1).setParentGid(customForm.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(date));
+                    x.setGid(getNewGid());
+                    customFormDetailList.add(x.setParentType(1).setParentGid(customForm.getGid()).setCudState(1).setCreateTime(date));
                 }else if(x.getCudState()==3){
                     customFormDetailRepository.deleteById(x.getGid());
                 }else{
@@ -144,13 +148,15 @@ public class CustomFormServiceImpl  implements CustomFormService {
             for (int i = 0; i <customForm.getChilds().size() ; i++) {
                 CustomFormChild customFormChild=customForm.getChilds().get(i);
                 if(StringUtil.isEmpty(customFormChild.getGid())){
-                    customFormChild.setGid(getNewGid()).setCustomFormGid(customForm.getGid()).setCudState(1);
+                    customFormChild.setGid(getNewGid());
+                    customFormChild.setCustomFormGid(customForm.getGid()).setCudState(1);
                     if(StringUtil.isEmpty(customFormChild.getCode())){
                         customFormChild.setCode(customForm.getCode()+i);
                     }
                     if(CollectionUtils.isNotEmpty(customFormChild.getFields())){
                         customFormChild.getFields().stream().forEach((x)-> {
-                            customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(date));
+                            x.setGid(getNewGid());
+                            customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setCudState(1).setCreateTime(date));
                         });
                     }
                     customFormChildList.add(customFormChild);
@@ -162,7 +168,8 @@ public class CustomFormServiceImpl  implements CustomFormService {
                     if(CollectionUtils.isNotEmpty(customFormChild.getFields())){
                         customFormChild.getFields().stream().forEach((x)-> {
                             if(StringUtil.isEmpty(x.getGid())){
-                                customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(date));
+                                x.setGid(getNewGid());
+                                customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setCudState(1).setCreateTime(date));
                             }else if(x.getCudState()==3){
                                 customFormDetailRepository.deleteById(x.getGid());
                             }else{
@@ -193,21 +200,24 @@ public class CustomFormServiceImpl  implements CustomFormService {
         //设置自定义表单主体对象
         if(CollectionUtils.isNotEmpty(customForm.getFields())){
             customForm.getFields().stream().forEach((x)-> {
-                customFormDetailList.add(x.setParentType(1).setParentGid(customForm.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(date));
+                x.setGid(getNewGid());
+                customFormDetailList.add(x.setParentType(1).setParentGid(customForm.getGid()).setCudState(1).setCreateTime(date));
             });
         }
         //自定义表单子表对象
         if(CollectionUtils.isNotEmpty(customForm.getChilds())){
             for (int i = 0; i <customForm.getChilds().size() ; i++) {
                 CustomFormChild customFormChild=customForm.getChilds().get(i);
-                customFormChild.setGid(getNewGid()).setCustomFormGid(customForm.getGid()).setCudState(1).setCreateTime(date);
+                customFormChild.setGid(getNewGid());
+                customFormChild.setCustomFormGid(customForm.getGid()).setCudState(1).setCreateTime(date);
                 if(StringUtil.isEmpty(customFormChild.getCode())){
                     customFormChild.setCode(customForm.getCode()+i);
                 }
                 //子表对象的属性啊
                 if(CollectionUtils.isNotEmpty(customFormChild.getFields())){
                     customFormChild.getFields().stream().forEach((x)-> {
-                        customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setGid(getNewGid()).setCudState(1).setCreateTime(date));
+                        x.setGid(getNewGid());
+                        customFormDetailList.add(x.setParentType(2).setParentGid(customFormChild.getGid()).setCudState(1).setCreateTime(date));
                     });
                 }
                 customFormChildList.add(customFormChild);

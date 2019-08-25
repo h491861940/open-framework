@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * 基本的service,单表继承这个,可以不用些crud
  *
- * @param <T>
- * @param <D>
+ * @param <T> 实体
+ * @param <D> DTO
  */
 public interface BaseService<T, D> {
     /**

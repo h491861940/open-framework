@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -77,7 +76,7 @@ public class BaseController<T, D> {
             System.out.println("我是有子类继承带泛型的");
             t = baseService.saveDto(dto);
         }
-        return JsonResultUtil.success(((BaseEntity) t).getGid());
+        return JsonResult.success(((BaseEntity) t).getGid());
     }
 
     /**
@@ -92,7 +91,7 @@ public class BaseController<T, D> {
         if (null != gids && gids.length > 0) {
             baseService.deleteBatchDto(dtoClass, Arrays.asList(gids));
         }
-        return JsonResultUtil.success();
+        return JsonResult.success();
     }
 
     /**
@@ -105,7 +104,7 @@ public class BaseController<T, D> {
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
     public JsonResult findById(@RequestParam String gid) {
         D dto = baseService.getDto(dtoClass, gid);
-        return JsonResultUtil.success(dto);
+        return JsonResult.success(dto);
     }
 
     /**
@@ -124,14 +123,12 @@ public class BaseController<T, D> {
     public JsonResult query(@RequestBody QueryParam queryParam) {
         Object obj = baseService.query(dtoClass, queryParam);
         if (obj instanceof PageBean) {
-            return JsonResultUtil.successPage((PageBean) obj);
+            return JsonResult.successPage((PageBean) obj);
         } else {
-            return JsonResultUtil.success(obj);
+            return JsonResult.success(obj);
         }
     }
 
-
-    @RequestMapping(value = "/export", method = RequestMethod.POST)
     /**
      * @Author hsj
      * @Description
@@ -144,6 +141,7 @@ public class BaseController<T, D> {
      * "oper":"eq"}],"pageBean":{"page":1,"pageSize":5}}}
      * @param exportData
      */
+    @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void export(@RequestBody ExportData exportData) {
         BaseConstant.formatMap.put("qwert", "qqqq");
         baseService.export(dtoClass, exportData);

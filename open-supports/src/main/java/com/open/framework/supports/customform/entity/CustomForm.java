@@ -1,5 +1,6 @@
 package com.open.framework.supports.customform.entity;
 
+import com.open.framework.dao.model.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,9 +17,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @Entity
-public class CustomForm implements Serializable {
-    @Id
-    private String gid;
+public class CustomForm extends BaseEntity {
     private String code;
     private String name;
     /**

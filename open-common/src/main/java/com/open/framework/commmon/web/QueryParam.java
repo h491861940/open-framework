@@ -1,10 +1,17 @@
 package com.open.framework.commmon.web;
 
-import java.util.List;
+import lombok.Data;
 
+import java.util.List;
+/**
+ * @description: 查询对象
+ * @author: hsj
+ * @date: 2019-08-23 18:16:12
+ */
+@Data
 public class QueryParam {
     /**
-     * 条件集合,前端传入,然后解析
+     * 条件集合,前端传入,然后解析,不能具体化,否则不能放map和list,为了放map,list,不能具体化SpecOper
      */
     private List<Object> specOpers;
     /**
@@ -20,35 +27,5 @@ public class QueryParam {
      */
     private boolean showCount=false;
 
-    public List<Object> getSpecOpers() {
-        return specOpers;
-    }
 
-    public void setSpecOpers(List<Object> specOpers) {
-        this.specOpers = specOpers;
-    }
-
-    public PageBean getPageBean() {
-        return pageBean;
-    }
-
-    public void setPageBean(PageBean pageBean) {
-        this.pageBean = pageBean;
-    }
-
-    public String getOrderBy() {
-        return orderBy;
-    }
-
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
-    }
-
-    public boolean getShowCount() {
-        return showCount;
-    }
-
-    public void setShowCount(boolean showCount) {
-        this.showCount = showCount;
-    }
 }

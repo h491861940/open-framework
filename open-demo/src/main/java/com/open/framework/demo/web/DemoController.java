@@ -1,6 +1,5 @@
 package com.open.framework.demo.web;
 
-import com.open.framework.commmon.utils.JsonResultUtil;
 import com.open.framework.commmon.web.JsonResult;
 import com.open.framework.core.web.param.RequestBodyParam;
 import com.open.framework.demo.design.BaseDesignExecute;
@@ -83,7 +82,7 @@ public class DemoController {
 
     public JsonResult testQuery() {
         Page page=demoService.testQuery();
-        return JsonResultUtil.successPage(page);
+        return JsonResult.successPage(page);
     }
     @RequestMapping("/testJson")
 
@@ -93,22 +92,22 @@ public class DemoController {
         u.setPassword("123456");
         u.setLoginName("hsj");
         u.setLoginDate(new Date());
-        return JsonResultUtil.success(u);
+        return JsonResult.success(u);
     }
     @RequestMapping(value = "/testDesign")
     public  JsonResult testDesign(@RequestParam String className,@RequestParam String str){
         demoOther.execute(className,str);
-        return JsonResultUtil.success();
+        return JsonResult.success();
     }
     @RequestMapping(value = "/testAsync")
     public  JsonResult testAsync(){
         demoService.executeAsync();
-        return JsonResultUtil.success();
+        return JsonResult.success();
     }
     @RequestMapping(value = "/publishEvent")
     public  JsonResult publishEvent(){
         demoService.publishEvent();
-        return JsonResultUtil.success();
+        return JsonResult.success();
     }
 
 }

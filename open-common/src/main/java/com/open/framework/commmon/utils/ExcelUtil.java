@@ -1,14 +1,14 @@
 package com.open.framework.commmon.utils;
 
+import com.open.framework.commmon.web.ImportData;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -18,13 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 
+
 public class ExcelUtil
 {
 	//SXSSFWorkbook类型，当内存中保留的最大条数。-1表示全部放在内存中。
 	public static final int SXSSF_WORKBOOK_UNFLUSH_COUNT = 128;
+
+	public static Map formatMap=new HashMap();
 	/**
 	 * 拷贝Sheet
-	 * 
+	 *
 	 * @param fromUrl
 	 *            源文件
 	 * @param toUrl
@@ -86,7 +89,7 @@ public class ExcelUtil
 
 	/**
 	 * POI获取模板文件单元格样式
-	 * 
+	 *
 	 * @param sheet
 	 * @param rownum
 	 * @param column
@@ -99,7 +102,7 @@ public class ExcelUtil
 
 	/**
 	 * 重写POI创建单元格方法
-	 * 
+	 *
 	 * @param sheet
 	 * @param rownum
 	 * @param column
@@ -118,7 +121,7 @@ public class ExcelUtil
 
 	/**
 	 * 重写POI合并单元格方法
-	 * 
+	 *
 	 * @param sheet
 	 * @param rowFrom
 	 * @param colFrom
@@ -133,7 +136,7 @@ public class ExcelUtil
 
 	/**
 	 * 返回工作薄对象
-	 * 
+	 *
 	 * @param fieldName
 	 *            自定义需要显示的列，对应Map中的Key
 	 * @param fieldTitle
@@ -151,7 +154,7 @@ public class ExcelUtil
 		// 建立标题
 		for (int i = 0; i < fieldTitle.size(); i++)
 		{
-			ExcelUtil.createCell(sheet, 0, i, style, fieldTitle.get(i));
+			createCell(sheet, 0, i, style, fieldTitle.get(i));
 		}
 		// 遍历数据
 		for (int i = 0; i < data.size(); i++)
@@ -160,20 +163,20 @@ public class ExcelUtil
 			for (int j = 0; j < fieldName.size(); j++)
 			{
 				String content = map.get(fieldName.get(j))==null?null:String.valueOf(map.get(fieldName.get(j)));
-				ExcelUtil.createCell(sheet, i + 1, j, style, content);
+				createCell(sheet, i + 1, j, style, content);
 			}
 		}
 		return workbook;
 	}
 
 	@SuppressWarnings("rawtypes")
-    public static HSSFWorkbook getHSSFWorkbook(List<String> fieldName, List<String> fieldTitle, List<Map> data)
+	public static HSSFWorkbook getHSSFWorkbook(List<String> fieldName, List<String> fieldTitle, List<Map> data)
 	{
 		return getHSSFWorkbook("Sheet0", fieldName, fieldTitle, data);
 	}
 	/**
 	 * 返回工作薄对象
-	 * 
+	 *
 	 * @param fieldName
 	 *            列名数组，可以为空
 	 * @param data
@@ -210,10 +213,10 @@ public class ExcelUtil
 		return workbook;
 	}
 
-	
+
 	/**
 	 * 返回工作薄对象
-	 * 
+	 *
 	 * @param fieldName
 	 *            自定义需要显示的列，对应Map中的Key
 	 * @param fieldTitle
@@ -223,11 +226,11 @@ public class ExcelUtil
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public static SXSSFWorkbook getSXSSFWorkbook(SXSSFWorkbook workbook,String sheetName, List<String> fieldName, List<String> fieldTitle, List<Map> data)
+	public static SXSSFWorkbook getSXSSFWorkbook(SXSSFWorkbook workbook, String sheetName, List<String> fieldName, List<String> fieldTitle, List<Map> data)
 	{
 		if(workbook==null)
 		{
-		 workbook = new SXSSFWorkbook(SXSSF_WORKBOOK_UNFLUSH_COUNT);
+			workbook = new SXSSFWorkbook(SXSSF_WORKBOOK_UNFLUSH_COUNT);
 		}
 //		大数据量时，启用临时文件压缩。
 //		if(data.size() > SXSSF_WORKBOOK_UNFLUSH_COUNT * 10){
@@ -238,7 +241,7 @@ public class ExcelUtil
 		// 建立标题
 		for (int i = 0; i < fieldTitle.size(); i++)
 		{
-			ExcelUtil.createCell(sheet, 0, i, style, fieldTitle.get(i));
+			createCell(sheet, 0, i, style, fieldTitle.get(i));
 		}
 		// 遍历数据
 		for (int i = 0; i < data.size(); i++)
@@ -247,19 +250,19 @@ public class ExcelUtil
 			for (int j = 0; j < fieldName.size(); j++)
 			{
 				String content = map.get(fieldName.get(j))==null?null:String.valueOf(map.get(fieldName.get(j)));
-				ExcelUtil.createCell(sheet, i + 1, j, style, content);
+				createCell(sheet, i + 1, j, style, content);
 			}
 		}
 		return workbook;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * 返回Excel输入流
-	 * 
+	 *
 	 * @param fieldName
 	 *            列名数组，可以为空
 	 * @param data
@@ -287,7 +290,7 @@ public class ExcelUtil
 
 	/**
 	 * 下载excel
-	 * 
+	 *
 	 * @param excelName
 	 * @param workbook
 	 * @param response
@@ -321,7 +324,7 @@ public class ExcelUtil
 
 	/**
 	 * 在输出流中导出excel
-	 * 
+	 *
 	 * @param fieldName
 	 *            列名数组，可以为空
 	 * @param data
@@ -359,105 +362,124 @@ public class ExcelUtil
 		}
 	}
 
-    /**
-     * 将Excel2007单个工作薄转换为ListMap
-     * 
-     * @param file
-     * @return
-     */
-    public static List<Map<String, String>> dataTransferExcel2007(File file)
-    {
-        return dataTransferExcel2007(file, 0);
-    }
-
-    /**
-     * 将Excel2007单个工作薄转换为ListMap
-     * 
-     * @param file
-     * @param sheetIndex
-     * @return
-     */
-    public static List<Map<String, String>> dataTransferExcel2007(File file, int sheetIndex)
-    {
-        return dataTransferExcel2007(file, sheetIndex, 0);
-    }
-
-    /**
-     * 将Excel2007单个工作薄转换为ListMap
-     * 
-     * @param file
-     * @param sheetIndex
-     * @param titleRow
-     * @return
-     */
-    public static List<Map<String, String>> dataTransferExcel2007(File file, int sheetIndex, int titleRow)
-    {
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        try
-        {
-            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file));
-            XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-            XSSFRow firstRow = sheet.getRow(titleRow);
-            XSSFRow contentRow = null;
-            int totalRows = sheet.getPhysicalNumberOfRows();
-            int totalCols = firstRow.getPhysicalNumberOfCells();
-            for (int i = titleRow + 1; i < totalRows; i++)
-            {
-                contentRow = sheet.getRow(i);
-                Map<String, String> map = new HashMap<>();
-                boolean emptyRow = true;
-                for (int j = contentRow.getFirstCellNum(); j < totalCols; j++)
-                {
-                    XSSFCell cell = contentRow.getCell(j);
-                    String cellValue = getCellvalue(cell).trim();
-                    // 只有有一个单元格有内容，此行才为非空行
-                    if (cellValue != null && !"".equals(cellValue))
-                    {
-                        emptyRow = false;
-                    }
-                    map.put(firstRow.getCell(j).getStringCellValue().trim(), cellValue);
-                }
-                // 确保为非空行才追加
-                if (emptyRow == false)
-                {
-                    list.add(map);
-                }
-            }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-	private static String getCellvalue(XSSFCell cell)
+	private static String getCellvalue(Cell cell)
 	{
 		String cellvalue = null;
 		if (cell != null)
 		{
 			switch (cell.getCellType())
 			{
-			case Cell.CELL_TYPE_NUMERIC:
-				if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell))
-				{
-					cellvalue = cell.getDateCellValue().toString();
-				} else
-				{
-					Integer num = new Integer((int) cell.getNumericCellValue());
-					cellvalue = String.valueOf(num);
-				}
-				break;
-			case Cell.CELL_TYPE_STRING:
-				cellvalue = cell.getStringCellValue();
-				break;
-			default:
-				cellvalue = "";
-				break;
+				case NUMERIC:
+					if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell))
+					{
+						cellvalue = cell.getDateCellValue().toString();
+					} else
+					{
+						Integer num = new Integer((int) cell.getNumericCellValue());
+						cellvalue = String.valueOf(num);
+					}
+					break;
+				case STRING:
+					cellvalue = cell.getStringCellValue();
+					break;
+				default:
+					cellvalue = "";
+					break;
 			}
 		} else
 		{
 			cellvalue = "";
 		}
 		return cellvalue;
+	}
+
+	/**
+	 * 读EXCEL文件，获取信息集合
+	 *
+	 * @param
+	 * @return
+	 */
+	public static List<Map<String, Object>> getExcelInfo(MultipartFile mFile, ImportData importData) {
+		// 获取文件名
+		String fileName = mFile.getOriginalFilename();
+		try {
+			// 根据文件名判断文件是2003版本还是2007版本
+			boolean isExcel2003 = true;
+			if (isExcel2007(fileName)) {
+				isExcel2003 = false;
+			}
+			Workbook wb = null;
+			// 当excel是2003时,创建excel2003
+			if (isExcel2003) {
+				wb = new HSSFWorkbook(mFile.getInputStream());
+			} else {
+				// 当excel是2007时,创建excel2007
+				wb = new XSSFWorkbook(mFile.getInputStream());
+			}
+			return readExcelValue(wb,importData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 读取Excel里面客户的信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private static  List<Map<String, Object>> readExcelValue(Workbook wb, ImportData importData) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+		// 得到Excel的行数
+		int totalRows = sheet.getPhysicalNumberOfRows();
+		int totalCells=0;
+		List<String>  columns=importData.getColumns();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows > 1 && sheet.getRow(0) != null) {
+			totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Map<String, Object>> infoList = new ArrayList<Map<String, Object>>();
+		if(CollectionUtils.isEmpty(columns)){
+			columns=new ArrayList<>();
+			for (int i = 0; i < totalCells; i++) {
+				columns.add("默认为column");
+			}
+		}
+		if(totalCells>columns.size()){
+			for (int i = 0; i < totalCells-columns.size(); i++) {
+				columns.add("默认为column");
+			}
+		}
+		// 循环Excel行数
+		for (int r = 1; r < totalRows; r++) {
+			Row row = sheet.getRow(r);
+			if (row == null) {
+				continue;
+			}
+			// 循环Excel的列
+			Map<String, Object> map = new HashMap<String, Object>();
+			for (int c = 0; c < totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					map.put(columns.get(c),getCellvalue(cell));
+				}
+			}
+			// 添加到list
+			infoList.add(map);
+		}
+		return infoList;
+	}
+
+	// @描述：是否是2003的excel，返回true是2003
+	public static boolean isExcel2003(String filePath) {
+		return filePath.matches("^.+\\.(?i)(xls)$");
+	}
+
+	// @描述：是否是2007的excel，返回true是2007
+	public static boolean isExcel2007(String filePath) {
+		return filePath.matches("^.+\\.(?i)(xlsx)$");
 	}
 }

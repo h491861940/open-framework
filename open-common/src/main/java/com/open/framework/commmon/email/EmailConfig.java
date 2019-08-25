@@ -10,7 +10,7 @@ public class EmailConfig {
 	/**
 	 * 发件邮箱
 	 */
-	@Value("${spring.mail.username}")
+	@Value("${spring.mail.username:}")
 	private String emailFrom;
 
 	public String getEmailFrom() {

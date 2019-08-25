@@ -1,5 +1,6 @@
 package com.open.framework.dao.model;
 
+import lombok.Data;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +16,8 @@ import java.util.Date;
 import javax.persistence.*;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-//@Where(clause = "del_state = false")
+@Where(clause = " del_state = 0 ")
+@Data
 public abstract class BaseEntity extends IdEntity {
     /**
      * 创建人
@@ -45,54 +47,8 @@ public abstract class BaseEntity extends IdEntity {
     @Temporal(TemporalType.TIMESTAMP)
     protected Date modifyDate;
 
-    protected boolean delState;
+    protected String delState;
 
-    protected boolean actState;
+    protected String actState;
 
-    public String getCreateId() {
-        return createId;
-    }
-
-    public void setCreateId(String createId) {
-        this.createId = createId;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getModifyId() {
-        return modifyId;
-    }
-
-    public void setModifyId(String modifyId) {
-        this.modifyId = modifyId;
-    }
-
-    public Date getModifyDate() {
-        return modifyDate;
-    }
-
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate;
-    }
-    public boolean getDelState() {
-        return delState;
-    }
-
-    public void setDelState(boolean delState) {
-        this.delState = delState;
-    }
-
-    public boolean getActState() {
-        return actState;
-    }
-
-    public void setActState(boolean actState) {
-        this.actState = actState;
-    }
 }

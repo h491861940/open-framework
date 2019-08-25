@@ -2,6 +2,8 @@ package com.open.framework.commmon.utils;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.*;
@@ -19,8 +21,8 @@ import java.util.List;
  * 2.文件及目录操作
  */
 public class FileUtil {
+	private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
 
-	// fileVisitor for file deletion on Files.walkFileTree
 	private static FileVisitor<Path> deleteFileVisitor = new SimpleFileVisitor<Path>() {
 
 		@Override
@@ -524,5 +526,76 @@ public class FileUtil {
 	 */
 	public static String getFileExtension(String fullName) {
 		return com.google.common.io.Files.getFileExtension(fullName);
+	}
+	/**
+	 * 创建目录
+	 *
+	 * @param dir 目录
+	 */
+	public static void mkdir(String dir) {
+		try {
+			String dirTemp = dir;
+			File dirPath = new File(dirTemp);
+			if (!dirPath.exists()) {
+				dirPath.mkdir();
+			}
+		} catch (Exception e) {
+			log.error("创建目录操作出错: "+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 移动文件到指定目录
+	 *
+	 * @param oldPath 包含路径的文件名 如：E:/phsftp/src/ljq.txt
+	 * @param newPath 目标文件目录 如：E:/phsftp/dest
+	 */
+	public static void moveFile(String oldPath, String newPath,String newFileName) {
+		copyFile(oldPath, newPath,newFileName);
+		delFile(oldPath);
+	}
+
+	/**
+	 * 复制单个文件
+	 *
+	 * @param srcFile
+	 *            包含路径的源文件 如：E:/phsftp/src/abc.txt
+	 * @param dirDest
+	 *            目标文件目录；若文件目录不存在则自动创建  如：E:/phsftp/dest
+	 */
+	public static void copyFile(String srcFile, String dirDest,String newFileName) {
+		try {
+			FileInputStream in = new FileInputStream(srcFile);
+			mkdir(dirDest);
+			FileOutputStream out = new FileOutputStream(dirDest+"/"+newFileName);
+			int len;
+			byte buffer[] = new byte[1024];
+			while ((len = in.read(buffer)) != -1) {
+				out.write(buffer, 0, len);
+			}
+			out.flush();
+			out.close();
+			in.close();
+		} catch (Exception e) {
+			log.error("复制文件操作出错:"+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 删除文件
+	 *
+	 * @param fileName 包含路径的文件名
+	 */
+	public static void delFile(String fileName) {
+		try {
+			String filePath = fileName;
+			File delFile = new File(filePath);
+			delFile.delete();
+		} catch (Exception e) {
+			log.error("删除文件操作出错: "+e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }

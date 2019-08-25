@@ -3,7 +3,6 @@ package com.open.framework.core.service.impl;
 import com.open.framework.commmon.exceptions.PlatformException;
 import com.open.framework.commmon.utils.BeanUtil;
 import com.open.framework.commmon.utils.ClassUtil;
-import com.open.framework.commmon.utils.JsonResultUtil;
 import com.open.framework.commmon.web.ExportData;
 import com.open.framework.commmon.web.PageBean;
 import com.open.framework.commmon.web.QueryParam;
@@ -11,19 +10,24 @@ import com.open.framework.core.dao.IBaseDao;
 import com.open.framework.core.service.BaseService;
 import com.open.framework.core.service.ExportService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
+/**
+ * @description: 基础的crud提供类
+ * @author: hsj
+ * @date: 2019-08-23 18:06:33
+ */
 @Service
 public class BaseServiceImpl<T, D> implements BaseService<T, D> {
 
     @Autowired
     IBaseDao baseDao;
+
     @Autowired
     ExportService exportService;
+
     public Class<T> getEntityClass(String dtoName) {
         Class<T> entityClass = ClassUtil.getEntityClass(this.getClass());
         try {

@@ -12,48 +12,28 @@
     <artifactId>open-file</artifactId>
 <dependencies>
     <dependency>
-        <groupId>cn.afterturn</groupId>
-        <artifactId>easypoi-base</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>cn.afterturn</groupId>
-        <artifactId>easypoi-web</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>cn.afterturn</groupId>
-        <artifactId>easypoi-annotation</artifactId>
-    </dependency>
-    <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-
     <dependency>
         <groupId>com.itextpdf</groupId>
         <artifactId>itextpdf</artifactId>
     </dependency>
-
     <dependency>
         <groupId>com.itextpdf</groupId>
         <artifactId>itext-asian</artifactId>
     </dependency>
-
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
     </dependency>
-    <!-- poi 3.9版本 -->
     <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi</artifactId>
+        <groupId>com.open.framework</groupId>
+        <artifactId>open-common</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi-ooxml</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.poi</groupId>
-        <artifactId>poi-ooxml-schemas</artifactId>
+        <groupId>cn.afterturn</groupId>
+        <artifactId>easypoi-spring-boot-starter</artifactId>
     </dependency>
 </dependencies>
     <build>
